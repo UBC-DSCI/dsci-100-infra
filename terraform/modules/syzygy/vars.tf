@@ -31,3 +31,7 @@ variable "memory" {
   default = 1024
 }
 
+variable "environment" {
+  description = "Environment to place instances in"
+  default = "staging"
+}

@@ -51,6 +51,7 @@ resource libvirt_domain hub {
 
   network_interface {
     network_name = "${var.network_name}"
+    wait_for_lease = 1
   }
 
   disk {
@@ -70,6 +71,26 @@ resource libvirt_domain hub {
   }
 }
 
+resource "ansible_group" "environment" {
+  inventory_group_name = "${var.environment}"
+}
+
+resource "ansible_group" "hubs" {
+  inventory_group_name = "hubs"
+}
+
+resource "ansible_host" "hub" {
+  inventory_hostname = "${random_pet.hub_name.id}"
+  groups = [
+    "all",
+    "${ansible_group.hubs.inventory_group_name}",
+    "${ansible_group.environment.inventory_group_name}",
+  ]
+  vars = {
+    ansible_host = "${libvirt_domain.hub.network_interface.0.addresses.0}"
+  }
+}
+
 resource libvirt_domain marking {
   name = "${random_pet.marking_name.id}"
 
@@ -80,6 +101,7 @@ resource libvirt_domain marking {
 
   network_interface {
     network_name = "${var.network_name}"
+    wait_for_lease = 1
   }
 
   disk {
@@ -99,3 +121,18 @@ resource libvirt_domain marking {
   }
 }
 
+resource "ansible_group" "markers" {
+  inventory_group_name = "markers"
+}
+
+resource "ansible_host" "marking" {
+  inventory_hostname = "${random_pet.marking_name.id}"
+  groups = [
+    "all",
+    "${ansible_group.markers.inventory_group_name}",
+    "${ansible_group.environment.inventory_group_name}",
+  ]
+  vars = {
+    ansible_host = "${libvirt_domain.marking.network_interface.0.addresses.0}"
+  }
+}
