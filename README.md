@@ -30,7 +30,7 @@ ssh -i <ip addr of hub>
 
 ## To Check
 
-- [ ] Is the pre-spawn hook defined in the correct place?
+- [x] Is the pre-spawn hook defined in the correct place?
 
   ```
   ansible/roles/internal/jupyterhub/templates/jupyterhub_config_base.py.j2
@@ -52,7 +52,7 @@ sudo yum install python36u-devel openssl-devel
 PYCURL_SSL_LIBRARY=openssl sudo -E pip3.6 install pycurl
 ```
 
-- [ ] Did I set the Apache proxy header correctly?
+- [x] Did I set the Apache proxy header correctly?
 
   ```
     <Location /jupyter>
@@ -63,15 +63,21 @@ PYCURL_SSL_LIBRARY=openssl sudo -E pip3.6 install pycurl
     </Location>
   ```
 
-- [ ] Should we update git?
+- [x] Should we update and upgrade git? Yes!
 
-- [ ] To specify at runtime:
+- [x] To specify at runtime:
 
   - Canvas API Token
   - LTI Consumer Key
   - LTI Consumer Secret
+  
+  - put it in a file that is in the same place as the ssh keys
 
-- [ ] Can we specify the course name?
+- [x] Can we specify the course name?
+
+  - incorporate course name into zfs role
+  - store as host or group variable (list of courses we will have)
+  - example: see local_vars.yml (we could encrypt this...)
 
 - [ ] Is ltiauthenticator installing?
 
