@@ -68,3 +68,14 @@ Is this yaml file being sourced, and if not, how would it be?
 ```
 ansible/roles/internal/ltiauthenticator/main.yml
 ```
+
+## Grading Server:
+
+```bash
+pip install rudaux
+pip install nbgrader
+
+sudo jupyter nbextension install --sys-prefix --py nbgrader --overwrite
+sudo jupyter nbextension enable --sys-prefix --py nbgrader
+sudo jupyter serverextension enable --sys-prefix --py nbgrader
+```
