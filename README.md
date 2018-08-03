@@ -9,10 +9,15 @@
     - `terraform plan`
     - `terraform apply`
 4.  Navigate to the `ansible` directory 
-4.  Use Make to drive ansible
-    - `make setup`
-    - `make ...`
+4.  run `setup` target from Makefile
+4.  Use ansible to setup hub using the commands that would be equivalend to 
+     - `make ansible/setup` > gets external roles
+     - `make hub/init` > updates kernel 
+     - `make hub/apply` > builds JupyterHub (this is the step we are iterating over
+     
 5.  ansible hub - iterate here until ltiauth is working
+
+*eventually terraform state file needs to live in an S3 bucket*
 
 ```
 ssh stty2u@<hypervisor address>
