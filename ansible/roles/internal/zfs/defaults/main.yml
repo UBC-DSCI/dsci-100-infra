@@ -1,0 +1,13 @@
+zfs_release_rpm: "http://download.zfsonlinux.org/epel/zfs-release.el{{ ansible_distribution_version | regex_replace('([0-9]+)\\.([0-9]+).*', '\\1_\\2') }}.noarch.rpm"
+
+zfs_pool_name: tank
+
+#
+# A string containing a valid zfs vdev specification
+# e.g. 
+#  zfs_vdev_config: mirror /dev/sda /dev/sdb
+#  zfs_vdev_config: /dev/sdb
+#  zfs_vdev_config: raidz /dev/sda /dev/sdb /dev/sdb
+#  
+# This variable is intentionally left blank because the zpool create process
+# will destroy any existing data on the devices specified
