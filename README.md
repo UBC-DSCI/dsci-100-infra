@@ -2,10 +2,22 @@
 
 ## Instructions
 
-1.  SSH into Hypervisor
-2.  terraform
-3.  anisble init
-4.  ansible hub - iterate here until ltiauth is working
+1.  SSH into Hypervisor 
+2.  use Git to clone this repository and move into the `terraform` directory
+3.  Run the following 3 commands:
+    - `terraform init`
+    - `terraform plan`
+    - `terraform apply`
+4.  Navigate to the `ansible` directory 
+4.  run `setup` target from Makefile
+4.  Use ansible to setup hub using the commands that would be equivalend to 
+     - `make ansible/setup` > gets external roles
+     - `make hub/init` > updates kernel 
+     - `make hub/apply` > builds JupyterHub (this is the step we are iterating over
+     
+5.  ansible hub - iterate here until ltiauth is working
+
+*eventually terraform state file needs to live in an S3 bucket*
 
 ```
 ssh stty2u@<hypervisor address>
