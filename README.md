@@ -9,7 +9,9 @@
     - `terraform plan`
     - `terraform apply`
 4.  Navigate to the `ansible` directory 
-4.  Run `anisble init`
+4.  Use Make to drive ansible
+    - `make setup`
+    - `make ...`
 5.  ansible hub - iterate here until ltiauth is working
 
 ```
