@@ -1,0 +1,3 @@
+---
+- name: Install rudaux
+  pip: name=rudaux executable=pip3.6
