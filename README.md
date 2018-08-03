@@ -18,20 +18,20 @@ ssh -i <ip addr of hub>
 
 ## To Check
 
-### Is the pre-spawn hook defined in the correct place?
+- [ ] Is the pre-spawn hook defined in the correct place?
 
-```
-ansible/roles/internal/jupyterhub/templates/jupyterhub_config_base.py.j2
-```
+  ```
+  ansible/roles/internal/jupyterhub/templates/jupyterhub_config_base.py.j2
+  ```
 
-### Do we need to use this for the hub_ip?
+- [ ] Do we need to use this for the hub_ip?
 
-```python
-from jupyter_client.localinterfaces import public_ips
-c.JupyterHub.hub_ip = public_ips()[0]
-```
+  ```python
+  from jupyter_client.localinterfaces import public_ips
+  c.JupyterHub.hub_ip = public_ips()[0]
+  ```
 
-### Is pycurl isntalling correctly?
+- [ ] Is pycurl isntalling correctly?
 
 If not:
 
@@ -40,34 +40,34 @@ sudo yum install python36u-devel openssl-devel
 PYCURL_SSL_LIBRARY=openssl sudo -E pip3.6 install pycurl
 ```
 
-### Did I set the Apache proxy header correctly?
+- [ ] Did I set the Apache proxy header correctly?
 
-```
-  <Location /jupyter>
-    ProxyPass http://127.0.0.1:8000/jupyter
-    ProxyPassReverse http://127.0.0.1:8000/jupyter
-    ProxyPreserveHost on
-    RequestHeader set X-Forwarded-Proto "https"
-  </Location>
-```
+  ```
+    <Location /jupyter>
+      ProxyPass http://127.0.0.1:8000/jupyter
+      ProxyPassReverse http://127.0.0.1:8000/jupyter
+      ProxyPreserveHost on
+      RequestHeader set X-Forwarded-Proto "https"
+    </Location>
+  ```
 
-### Should we update git?
+- [ ] Should we update git?
 
-### To specify at runtime:
+- [ ] To specify at runtime:
 
-- Canvas API Token
-- LTI Consumer Key
-- LTI Consumer Secret
+  - Canvas API Token
+  - LTI Consumer Key
+  - LTI Consumer Secret
 
-### Can we specify the course name?
+- [ ] Can we specify the course name?
 
-### Is ltiauthenticator installing?
+- [ ] Is ltiauthenticator installing?
 
-Is this yaml file being sourced, and if not, how would it be?
+  Is this yaml file being sourced, and if not, how would it be?
 
-```
-ansible/roles/internal/ltiauthenticator/main.yml
-```
+  ```
+  ansible/roles/internal/ltiauthenticator/main.yml
+  ```
 
 ## Grading Server:
 
