@@ -51,6 +51,7 @@ RequestHeader unset Shib-Authentication-Instant
     ProxyPass http://127.0.0.1:8000/jupyter
     ProxyPassReverse http://127.0.0.1:8000/jupyter
     ProxyPreserveHost on
+    RequestHeader set X-Forwarded-Proto "https"
   </Location>
 
 {% if jupyterhub_authenticator == 'shib' %}
