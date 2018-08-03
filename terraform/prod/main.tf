@@ -8,7 +8,7 @@ resource "libvirt_network" "syzygy_network" {
 }
 
 module "syzygy" {
-  source = "../../modules/syzygy"
+  source = "../modules/syzygy"
 
   storage_pool = "local-images"
   public_key   = "${file("../../keys/id_syzygy_stat.pub")}"

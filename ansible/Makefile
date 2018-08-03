@@ -25,4 +25,4 @@ hub/init: check-env
 	$(PLAYBOOK_CMD) plays/init.yml
 
 hub/apply: check-env
-	$(PLAYBOOK_CMD) --limit hub plays/hub.yml
+	$(PLAYBOOK_CMD) plays/hub.yml
