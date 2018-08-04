@@ -1,6 +1,6 @@
 ---
 - name: Ensure sudo is configured correctly
-  hosts: hubs
+  hosts: all
   become: true
   tasks:
     # Settings are defined in
@@ -13,7 +13,7 @@
           ansible_ssh_pipelining: no
 
 - name: Install and configure the hub
-  hosts: hubs
+  hosts: all
   become: true
   tasks:
     - name: Ensure hostname is set
