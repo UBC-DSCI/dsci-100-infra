@@ -8,6 +8,29 @@ def create_fs_hook(spawner):
     callysto_user = 'jupyter'
     check_call(['/opt/syzygyauthenticator/zfs-homedir.sh', username, callysto_user])
 
+def create_dir_hook(spawner):
+  username = spawner.user.name  # get the username
+  volume_path = os.path.join('/tank/home', username)
+  if not os.path.exists(volume_path):
+    # create a directory with umask 0755
+    # hub and container user must have the same UID to be writeable
+    # still readable by other users on the system
+    # Don't bother setting permissions here, they won't work because of umask issues
+    os.mkdir(volume_path)
+    os.chown(volume_path, {{ jupyterhub_user_uid }}, {{ jupyterhub_user_uid }})
+    # this is python3 octal notation (so we know it's not a base-10 integer)
+    os.chmod(volume_path, 0o700)
+    # now do whatever you think your user needs
+    # ...
+    pass
+
+{# Directly assign pre_spawn_hook here? Or should this be in the main.yml file #}
+c.Spawner.pre_spawn_hook = create_dir_hook
+
+{# May want to consider this as well for setting JupyterHub ip address #}
+{# from jupyter_client.localinterfaces import public_ips #}
+{# c.JupyterHub.hub_ip = public_ips()[0] #}
+
 {% for global_option in jupyterhub_global_options %}
 c.{{ global_option.conf_object }} = {{ global_option.value }}
 {% endfor %}
