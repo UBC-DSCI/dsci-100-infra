@@ -3,6 +3,15 @@ domain: "dsc.stat.ubc.ca"
 jupyterhub_html_family: syzygy-html
 syzygy_html_longname: "UBC"
 
+# syzygyauthenticator_version: shib-ubc
+# jupyterhub_spawner: dockerspawner
+# jupyterhub_authenticator: shib
+
+# The docker image to use for notebooks
+# jupyterhub_docker_image: 'pimsubc/nonroot'
+# jupyterhub_docker_container: 'pimsubc/nonroot:0.1'
+
+
 # Devices should really be reported by the terraform provider and kept passed
 # back as variables inside the inventory, but I haven't figured that out yet.
 # For the moment, we need to set the zfs and docker device letters manually.

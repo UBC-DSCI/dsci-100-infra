@@ -1,13 +1,3 @@
-resource "random_pet" "hub_name" {
-  length = 1
-  prefix = "jhub"
-}
-
-resource "random_pet" "marking_name" {
-  length = 1
-  prefix = "mark"
-}
-
 data template_file cloud_init {
 
   template = "${file("${path.module}/cloud_init.cfg.tpl")}"
@@ -30,26 +20,26 @@ resource "libvirt_cloudinit" "commoninit" {
 }
 
 resource "libvirt_volume" "hub_root_disk" {
-  name = "${random_pet.hub_name.id}-root.qcow2"
+  name = "${var.hub_fqdn}-root.qcow2"
   pool = "${var.storage_pool}"
   source = "${var.cloud_image}"
 }
 
 resource "libvirt_volume" "hub_zfs_disk" {
-  name = "${random_pet.hub_name.id}-zfs.qcow2"
+  name = "${var.hub_fqdn}-zfs.qcow2"
   pool = "${var.storage_pool}"
   size = "${var.zfs_disk_size}"
 }
 
 resource "libvirt_volume" "hub_docker_disk" {
-  name = "${random_pet.hub_name.id}-docker.qcow2"
+  name = "${var.hub_fqdn}-docker.qcow2"
   pool = "${var.storage_pool}"
   size = "${var.docker_disk_size}"
 }
 
 
 resource libvirt_domain hub {
-  name = "${random_pet.hub_name.id}"
+  name = "${var.hub_fqdn}"
 
   vcpu   = "${var.vcpu}"
   memory = "${var.memory}"
@@ -57,7 +47,9 @@ resource libvirt_domain hub {
   cloudinit = "${libvirt_cloudinit.commoninit.id}"
 
   network_interface {
-    network_name = "${var.network_name}"
+    bridge = "${var.hub_bridge}"
+    addresses = ["${var.hub_address}"]
+    mac = "${var.hub_mac}"
     wait_for_lease = 1
   }
 
@@ -95,38 +87,35 @@ resource "ansible_group" "hubs" {
 }
 
 resource "ansible_host" "hub" {
-  inventory_hostname = "${random_pet.hub_name.id}"
+  inventory_hostname = "${var.hub_fqdn}"
   groups = [
     "all",
     "${ansible_group.hubs.inventory_group_name}",
     "${ansible_group.environment.inventory_group_name}",
   ]
-  vars = {
-    ansible_host = "${libvirt_domain.hub.network_interface.0.addresses.0}"
-  }
 }
 
 resource "libvirt_volume" "marking_root_disk" {
-  name = "${random_pet.marking_name.id}.qcow2"
+  name = "${var.mark_fqdn}.qcow2"
   pool = "${var.storage_pool}"
   source = "${var.cloud_image}"
 }
 
 resource "libvirt_volume" "marking_zfs_disk" {
-  name = "${random_pet.marking_name.id}-zfs.qcow2"
+  name = "${var.mark_fqdn}-zfs.qcow2"
   pool = "${var.storage_pool}"
   size = "${var.zfs_disk_size}"
 }
 
 resource "libvirt_volume" "marking_docker_disk" {
-  name = "${random_pet.marking_name.id}-docker.qcow2"
+  name = "${var.mark_fqdn}-docker.qcow2"
   pool = "${var.storage_pool}"
   size = "${var.docker_disk_size}"
 }
 
 
 resource libvirt_domain marking {
-  name = "${random_pet.marking_name.id}"
+  name = "${var.mark_fqdn}"
 
   vcpu   = "${var.vcpu}"
   memory = "${var.memory}"
@@ -134,7 +123,9 @@ resource libvirt_domain marking {
   cloudinit = "${libvirt_cloudinit.commoninit.id}"
 
   network_interface {
-    network_name = "${var.network_name}"
+    bridge = "${var.mark_bridge}"
+    mac = "${var.mark_mac}"
+    addresses = ["${var.mark_address}"]
     wait_for_lease = 1
   }
 
@@ -168,13 +159,10 @@ resource "ansible_group" "markers" {
 }
 
 resource "ansible_host" "marking" {
-  inventory_hostname = "${random_pet.marking_name.id}"
+  inventory_hostname = "${var.mark_fqdn}"
   groups = [
     "all",
     "${ansible_group.markers.inventory_group_name}",
     "${ansible_group.environment.inventory_group_name}",
   ]
-  vars = {
-    ansible_host = "${libvirt_domain.marking.network_interface.0.addresses.0}"
-  }
 }

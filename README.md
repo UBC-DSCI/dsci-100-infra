@@ -97,3 +97,17 @@ sudo jupyter nbextension install --sys-prefix --py nbgrader --overwrite
 sudo jupyter nbextension enable --sys-prefix --py nbgrader
 sudo jupyter serverextension enable --sys-prefix --py nbgrader
 ```
+
+## Rebuilding the environment
+
+Here are temporary instructions for rebuilding the hub and marker environments
+from scratch
+```
+  $ cd dsc100-infra-ian/terraform/prod
+  $ terraform init
+  $ terraform plan
+  $ terraform apply
+  $ cd ../../ansible/
+  $ make env=prod hub/init
+  $ make env=prod hub/apply
+```
