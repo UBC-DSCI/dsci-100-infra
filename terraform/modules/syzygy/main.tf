@@ -30,16 +30,23 @@ resource "libvirt_cloudinit" "commoninit" {
 }
 
 resource "libvirt_volume" "hub_root_disk" {
-  name = "${random_pet.hub_name.id}.qcow2"
+  name = "${random_pet.hub_name.id}-root.qcow2"
   pool = "${var.storage_pool}"
   source = "${var.cloud_image}"
 }
 
-resource "libvirt_volume" "marking_root_disk" {
-  name = "${random_pet.marking_name.id}.qcow2"
+resource "libvirt_volume" "hub_zfs_disk" {
+  name = "${random_pet.hub_name.id}-zfs.qcow2"
   pool = "${var.storage_pool}"
-  source = "${var.cloud_image}"
+  size = "${var.zfs_disk_size}"
 }
+
+resource "libvirt_volume" "hub_docker_disk" {
+  name = "${random_pet.hub_name.id}-docker.qcow2"
+  pool = "${var.storage_pool}"
+  size = "${var.docker_disk_size}"
+}
+
 
 resource libvirt_domain hub {
   name = "${random_pet.hub_name.id}"
@@ -56,6 +63,14 @@ resource libvirt_domain hub {
 
   disk {
     volume_id = "${libvirt_volume.hub_root_disk.id}"
+  }
+
+  disk {
+    volume_id = "${libvirt_volume.hub_zfs_disk.id}"
+  }  
+
+  disk {
+    volume_id = "${libvirt_volume.hub_docker_disk.id}"
   }
 
   console {
@@ -91,6 +106,25 @@ resource "ansible_host" "hub" {
   }
 }
 
+resource "libvirt_volume" "marking_root_disk" {
+  name = "${random_pet.marking_name.id}.qcow2"
+  pool = "${var.storage_pool}"
+  source = "${var.cloud_image}"
+}
+
+resource "libvirt_volume" "marking_zfs_disk" {
+  name = "${random_pet.marking_name.id}-zfs.qcow2"
+  pool = "${var.storage_pool}"
+  size = "${var.zfs_disk_size}"
+}
+
+resource "libvirt_volume" "marking_docker_disk" {
+  name = "${random_pet.marking_name.id}-docker.qcow2"
+  pool = "${var.storage_pool}"
+  size = "${var.docker_disk_size}"
+}
+
+
 resource libvirt_domain marking {
   name = "${random_pet.marking_name.id}"
 
@@ -106,6 +140,14 @@ resource libvirt_domain marking {
 
   disk {
     volume_id = "${libvirt_volume.marking_root_disk.id}"
+  }
+
+  disk {
+    volume_id = "${libvirt_volume.marking_zfs_disk.id}"
+  }
+
+  disk {
+    volume_id = "${libvirt_volume.marking_docker_disk.id}"
   }
 
   console {

@@ -35,3 +35,13 @@ variable "environment" {
   description = "Environment to place instances in"
   default = "staging"
 }
+
+variable "docker_disk_size" {
+  description = "Disk size for backing docker volume"
+  default = "21474836480"
+}
+
+variable "zfs_disk_size" {
+  description = "Disk size for backing docker volume"
+  default = "21474836480"
+}
