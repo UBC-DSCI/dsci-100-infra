@@ -5,8 +5,8 @@ TF_PATH := $(TOP)/../terraform
 
 export PATH := $(TF_PATH)/bin/$(UNAME)_$(ARCH):$(PATH)
 
-ANSIBLE_CMD  = TF_STATE=$(TF_PATH)/$(env) ansible --private-key=../keys/id_syzygy_stat -i ./bin/ansible-terraform-inventory-$(UNAME)-$(ARCH)
-PLAYBOOK_CMD = TF_STATE=$(TF_PATH)/$(env) ansible-playbook --private-key=../keys/id_syzygy_stat -i ./bin/ansible-terraform-inventory-$(UNAME)-$(ARCH)
+ANSIBLE_CMD  = TF_STATE=$(TF_PATH)/$(env) ansible --private-key=../keys/id_syzygy_stat -i ./inventory
+PLAYBOOK_CMD = TF_STATE=$(TF_PATH)/$(env) ansible-playbook --private-key=../keys/id_syzygy_stat -i ./inventory
 
 setup:
 	@echo "Installing external Ansible roles"
@@ -22,7 +22,7 @@ ansible/setup: check-env
 	$(ANSIBLE_CMD) -m setup all
 
 hub/init: check-env
-	$(PLAYBOOK_CMD) plays/init.yml
+	$(PLAYBOOK_CMD) --limit hubs plays/init.yml
 
 hub/apply: check-env
-	$(PLAYBOOK_CMD) plays/hub.yml
+	$(PLAYBOOK_CMD) --limit hubs plays/hub.yml
