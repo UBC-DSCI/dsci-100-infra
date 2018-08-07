@@ -116,8 +116,6 @@
     mode: 0600
     owner: root
     group: root
-  include_vars: 
-    file: secrets.yml
 
 - name: Jupyterhub Service definition
   template:
