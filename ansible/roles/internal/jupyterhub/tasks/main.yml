@@ -11,12 +11,12 @@
 - name: Manage Jupyterhub Docker Cull script
   include_role:
     name: jhub-docker-cull
-  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner']
+  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
 
 - name: Get Docker image for JupyterHub containers
   docker_image:
     name: '{{ jupyterhub_docker_container }}'
-  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner']
+  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
 
 - name: Manage syzygyauthenticator
   include_role:
