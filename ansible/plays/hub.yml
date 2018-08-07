@@ -120,9 +120,17 @@
     #   * ssp-idp-multi
     #   * callysto-html
     #   * syzygyauthenticator
+    #   * ltiauthenticator
+    # Less so with the following roles (but still coupled)
+    #   * nbgrader
+    #   * rudaux
     # These roles should not be used independently.
     # TODO: merge all of these roles into one?
     - name: Manage Jupyterhub
       tags: ["jupyter", "jupyterhub", "ssp"]
       include_role:
         name: jupyterhub
+        vars: 
+          jupyterhub_spawner: 'dockerspawner'
+          jupyterhub_authenticator: 'ltiauthenticator'
+          jupyterhub_course_name: 'dsci100'

@@ -1,10 +1,4 @@
 ---
-
-- name: Include JupyterHub configuration variables
-  include_vars:
-    dir: vars
-    ignore_files: secrets.template.yml
-
 - name: Manage landing page html repo
   include_role:
     name: '{{ jupyterhub_html_family }}'
@@ -27,6 +21,7 @@
 - name: Manage syzygyauthenticator
   include_role:
     name: syzygyauthenticator
+  when: jupyterhub_authenticator == 'syzygyauthenticator'
 
 - name: Manage Shibboleth
   include_role:
@@ -121,6 +116,8 @@
     mode: 0600
     owner: root
     group: root
+  include_vars: 
+    file: secrets.yml
 
 - name: Jupyterhub Service definition
   template:
