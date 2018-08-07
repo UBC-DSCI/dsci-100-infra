@@ -114,6 +114,23 @@
       include_role:
         name: docker-storage
 
+    # Clumsily install JupyterHub dependencies
+    - name: Install Docker Spawner
+      include_role:
+        name: dockerspawner
+
+    - name: Install LTIAuthenticator
+      include_role:
+        name: ltiauthenticator
+
+    - name: Install nbgrader
+      include_role:
+        name: nbgrader
+
+    - name: Install rudaux
+      include_role:
+        name: rudaux
+
     # Manage Jupyterhub
     # This role is tightly coupled to the following roles:
     #   * dockerspawner
