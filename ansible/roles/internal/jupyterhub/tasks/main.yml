@@ -76,6 +76,22 @@
     state: present
     global: yes
 
+# Clumsily install JupyterHub dependencies
+- name: Install LTIAuthenticator
+  include_role:
+    name: ltiauthenticator
+  when: jupyterhub_authenticator == 'ltiauthenticator'
+
+- name: Install nbgrader
+  include_role:
+    name: nbgrader
+  # when: grading server, not jupyterhub server
+
+- name: Install rudaux
+  include_role:
+    name: rudaux
+  # when: canvas is being used?
+
 - name: Create JupyterHub Config Directory
   file:
     path: '{{ jupyterhub_srv_dir }}'

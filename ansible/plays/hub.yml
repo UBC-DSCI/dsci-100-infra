@@ -114,29 +114,6 @@
       include_role:
         name: docker-storage
 
-    # Clumsily install JupyterHub dependencies
-
-    # Redundant, added 'dockerspawner' to JupyterHub/tasks/main.yml
-    # - name: Install Docker Spawner
-    #   include_role:
-    #     name: dockerspawner
-    #   when: jupyterhub_spawner == 'dockerspawner'
-
-    - name: Install LTIAuthenticator
-      include_role:
-        name: ltiauthenticator
-      when: jupyterhub_authenticator == 'ltiauthenticator'
-
-    - name: Install nbgrader
-      include_role:
-        name: nbgrader
-      # when: grading server, not jupyterhub server
-
-    - name: Install rudaux
-      include_role:
-        name: rudaux
-      # when: canvas is being used?
-
     # Manage Jupyterhub
     # This role is tightly coupled to the following roles:
     #   * dockerspawner
@@ -149,7 +126,6 @@
       tags: ["jupyter", "jupyterhub", "ssp"]
       include_role:
         name: jupyterhub
-      vars:
-        jupyterhub_spawner: 'dockerspawner'
-        jupyterhub_authenticator: 'ltiauthenticator'
-        jupyterhub_course_name: 'dsci100'
+      include_vars:
+        dir: vars
+        ignore_files: secrets.template.yaml
