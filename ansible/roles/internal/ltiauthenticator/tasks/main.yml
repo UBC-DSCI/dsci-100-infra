@@ -1,3 +1,6 @@
 ---
+# - name: Install jupyterhub-ltiauthenticator
+#   pip: name=jupyterhub-ltiauthenticator executable=pip3.6
+
 - name: Install jupyterhub-ltiauthenticator
-  pip: name=jupyterhub-ltiauthenticator executable=pip3.6
+  command: cd /opt && git clone https://github.com/jupyterhub/ltiauthenticator.git && cd ltiauthenticator & sudo pip3.6 -e install .
