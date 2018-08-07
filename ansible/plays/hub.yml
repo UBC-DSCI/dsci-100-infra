@@ -126,6 +126,3 @@
       tags: ["jupyter", "jupyterhub", "ssp"]
       include_role:
         name: jupyterhub
-      include_vars:
-        dir: vars
-        ignore_files: secrets.template.yaml

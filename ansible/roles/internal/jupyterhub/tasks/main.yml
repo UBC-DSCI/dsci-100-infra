@@ -1,4 +1,10 @@
 ---
+
+- name: Include JupyterHub configuration variables
+  include_vars:
+    dir: vars
+    ignore_files: secrets.template.yml
+
 - name: Manage landing page html repo
   include_role:
     name: '{{ jupyterhub_html_family }}'
@@ -115,8 +121,6 @@
     mode: 0600
     owner: root
     group: root
-  include_vars: 
-    file: secrets.yaml
 
 - name: Jupyterhub Service definition
   template:
