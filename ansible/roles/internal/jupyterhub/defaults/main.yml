@@ -76,8 +76,6 @@ jupyterhub_spawners:
         value: "{'mem_limit': '2g', 'memswap_limit': '2g', 'cpu_period': 100000, 'cpu_quota': 100000 }"
       - conf_object: 'DockerSpawner.remove_containers'
         value: 'True'
-      - conf_object: 'DockerSpawner.host_homedir_format_string'
-        value: "'/tank/home/{username}'"
       - conf_object: 'DockerSpawner.notebook_dir'
         value: "'{{ jupyterhub_notebook_dir }}'"
       - conf_object: 'DockerSpawner.volumes'
