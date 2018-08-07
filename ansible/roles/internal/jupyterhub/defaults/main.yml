@@ -13,8 +13,8 @@ jupyterhub_shib_dir: '/opt/shib_authenticator'
 jhub_docker_cull_run_s: 1800
 jhub_docker_cull_cull_s: 10800
 
-jupyterhub_docker_image: 'docker.io/callysto/pims-minimal'
-jupyterhub_docker_container: 'docker.io/callysto/pims-minimal:latest'
+# jupyterhub_docker_image: 'docker.io/callysto/pims-minimal'
+# jupyterhub_docker_container: 'docker.io/callysto/pims-minimal:latest'
 
 jupyterhub_notebook_dir: '/home/jovyan'
 # Not sure if this makes sense, because we would only run ansible once for each
