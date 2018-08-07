@@ -130,7 +130,7 @@
       tags: ["jupyter", "jupyterhub", "ssp"]
       include_role:
         name: jupyterhub
-        vars: 
-          jupyterhub_spawner: 'dockerspawner'
-          jupyterhub_authenticator: 'ltiauthenticator'
-          jupyterhub_course_name: 'dsci100'
+      vars: 
+        jupyterhub_spawner: 'dockerspawner'
+        jupyterhub_authenticator: 'ltiauthenticator'
+        jupyterhub_course_name: 'dsci100'
