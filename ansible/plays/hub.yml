@@ -129,4 +129,4 @@
       vars:
         jupyterhub_spawner: dockerspawner
         jupyterhub_authenticator: ltiauthenticator
-
+        jupyterhub_course_name: 'dsci100'
