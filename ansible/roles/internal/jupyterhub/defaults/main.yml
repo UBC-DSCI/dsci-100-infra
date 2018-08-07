@@ -83,8 +83,8 @@ jupyterhub_spawners:
       - conf_object: 'DockerSpawner.volumes'
         #! Is this interpolated correctly??
         # In fact, do we even want this?
-        value: "'/tank/home/{{ jupyterhub_course_name }}/{username}': '{{ jupyterhub_notebook_dir }}'"
-        # value: "'/tank/home/{username}': '{{ jupyterhub_notebook_dir }}'"
+        value: "{'/tank/home/{{ jupyterhub_course_name }}/{username}': '{{ jupyterhub_notebook_dir }}'}"
+        # value: "{'/tank/home/{username}': '{{ jupyterhub_notebook_dir }}'}"
   syzygyswiftsystemuserspawner:
     name: 'syzygyauthenticator.swiftsystemuserspawner.SyzygySwiftSystemUserSpawner'
     options:
