@@ -6,7 +6,7 @@
 - name: Manage dockerspawner
   include_role:
     name: dockerspawner
-  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner']
+  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
 
 - name: Manage Jupyterhub Docker Cull script
   include_role:
@@ -99,6 +99,8 @@
     mode: 0600
     owner: root
     group: root
+  include_vars: 
+    file: secrets.yaml
 
 - name: Jupyterhub Service definition
   template:

@@ -3,3 +3,12 @@ JUPYTERHUB={{ jupyterhub_srv_dir }}
 {% if jupyterhub_oauth_github_host is defined %}
 GITHUB_HOST={{ jupyterhub_oauth_github_host }}
 {% endif %}
+
+{% if jupyterhub_lti_client_key is defined %}
+LTI_CLIENT_KEY={{ jupyterhub_lti_client_key }}
+{% endif %}
+
+{% if jupyterhub_lti_client_secret is defined %}
+LTI_CLIENT_SECRET={{ jupyterhub_lti_client_secret }}
+{% endif %}
+
