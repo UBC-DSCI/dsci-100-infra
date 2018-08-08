@@ -6,7 +6,7 @@ from subprocess import check_call
 def create_fs_hook(spawner):
     username = spawner.user.name
     callysto_user = 'jupyter'
-    check_call(['/opt/syzygyauthenticator/zfs-homedir.sh', username, callysto_user])
+    check_call(['{{ jupyterhub_srv_dir }}/zfs-homedir.sh', username, callysto_user])
 
 {# Directly assign pre_spawn_hook here? Or should this be in the main.yml file #}
 c.Spawner.pre_spawn_hook = create_fs_hook
