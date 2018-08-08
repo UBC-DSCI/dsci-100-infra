@@ -112,6 +112,11 @@
       include_role:
         name: docker-storage
 
+    - name: Install nbgrader
+      include_role:
+        name: nbgrader
+    # when: grading server, not jupyterhub server
+
     - name: Install rudaux
       include_role:
         name: rudaux
