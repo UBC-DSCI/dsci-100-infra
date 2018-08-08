@@ -1,12 +1,7 @@
 ---
 - name: Install nbgrader
   pip: name=nbgrader executable=pip3.6
-
-- name: Install nbgrader Jupyter extension
-  command: jupyter nbextension install --sys-prefix --py nbgrader --overwrite
-
-- name: Enable nbgrader Jupyter extension
-  command: jupyter nbextension enable --sys-prefix --py nbgrader
-
-- name: Install nbgrader server extension
-  command: jupyter serverextension enable --sys-prefix --py nbgrader
+  notify:
+    - Install nbgrader Jupyter extension
+    - Enable nbgrader Jupyter extension
+    - Install nbgrader server extension
