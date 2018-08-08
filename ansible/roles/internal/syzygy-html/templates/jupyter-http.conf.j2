@@ -5,6 +5,7 @@ UseCanonicalName On
 # Unset REMOTE_USER header (for security)
 RequestHeader unset REMOTE_USER
 RequestHeader unset {{ shib_auth_attribute }}
+RequestHeader unset {{ shib_id_attribute }}
 RequestHeader unset Shib-Authentication-Instant
 {% endif %}
 
@@ -61,6 +62,7 @@ RequestHeader unset Shib-Authentication-Instant
     ShibRequestSetting requireSession true
     ShibUseHeaders off
     RequestHeader set REMOTE_USER %{REMOTE_USER}s
+    RequestHeader set {{ shib_id_attribute }} "%{{ '{' }}{{ shib_id_attribute }}{{ '}' }}e"
     RequestHeader set {{ shib_auth_attribute }} "%{{ '{' }}{{ shib_auth_attribute }}{{ '}' }}e"
     RequestHeader set Shib-Authentication-Instant "%{Shib-Authentication-Instant}e"
   </Location>
@@ -73,6 +75,7 @@ RequestHeader unset Shib-Authentication-Instant
     ShibRequestSetting requireSession true
     ShibUseHeaders off
     RequestHeader set REMOTE_USER %{REMOTE_USER}s
+    RequestHeader set {{ shib_id_attribute }} "%{{ '{' }}{{ shib_id_attribute }}{{ '}' }}e"
     RequestHeader set {{ shib_auth_attribute }} "%{{ '{' }}{{ shib_auth_attribute }}{{ '}' }}e"
     RequestHeader set Shib-Authentication-Instant "%{Shib-Authentication-Instant}e"
 {% endif %}
