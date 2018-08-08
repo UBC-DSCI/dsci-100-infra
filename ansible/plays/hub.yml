@@ -130,7 +130,12 @@
       tags: ['jupyter', 'jupyterhub', 'ssp', 'secrets']
       include_role:
         name: jupyterhub
-# vars:
-#   jupyterhub_spawner: 'dockerspawner'
-#   jupyterhub_authenticator: 'ltiauthenticator'
-#   jupyterhub_course_name: 'dsci100'
+
+
+- name: Install and configure the hub
+  hosts: markers
+  become: true
+  tasks:
+    - name: Install nbgrader
+      include_role:
+        name: nbgrader
