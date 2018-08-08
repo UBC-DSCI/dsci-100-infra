@@ -1,10 +1,3 @@
----
-
-- name: Include JupyterHub configuration variables
-  include_vars:
-    dir: vars
-    ignore_files: secrets.template.yml
-
 - name: Manage landing page html repo
   include_role:
     name: '{{ jupyterhub_html_family }}'
@@ -12,21 +5,25 @@
 - name: Manage dockerspawner
   include_role:
     name: dockerspawner
-  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
+  when:
+    jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
 
 - name: Manage Jupyterhub Docker Cull script
   include_role:
     name: jhub-docker-cull
-  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner']
+  when:
+    jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
 
 - name: Get Docker image for JupyterHub containers
   docker_image:
     name: '{{ jupyterhub_docker_container }}'
-  when: jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner']
+  when:
+    jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
 
 - name: Manage syzygyauthenticator
   include_role:
     name: syzygyauthenticator
+  when: jupyterhub_authenticator == 'syzygyauthenticator'
 
 - name: Manage Shibboleth
   include_role:
@@ -35,21 +32,19 @@
 
 - name: Examine groups
   debug:
-    msg: "Content of group_names is {{ group_names }}"
+    msg: 'Content of group_names is {{ group_names }}'
 
 - name: Add a jupyter user to run things as
   user:
-    name: "jupyter"
+    name: '{{ jupyterhub_user_name }}'
+    uid: '{{ jupyterhub_user_uid }}'
 
-- name: Get the jupyter uidNumber
-  getent:
-    database: passwd
-    key: "jupyter"
-    split: ':'
-
-- name: Collect the UserID for jupyter user
-  set_fact:
-    jupyterhub_user_uid: '{{ getent_passwd["jupyter"][1] }}'
+# Should't assume pool name here, fix later
+- name: Create ZFS course container
+  command: /sbin/zfs create 'tank/home/{{ jupyterhub_course_name }}'
+  args:
+    creates: '/tank/home/{{ jupyterhub_course_name }}'
+  when: zfs_vdev_config is defined
 
 - name: Install pycurl dependencies
   yum:
@@ -88,16 +83,6 @@
     name: ltiauthenticator
   when: jupyterhub_authenticator == 'ltiauthenticator'
 
-- name: Install nbgrader
-  include_role:
-    name: nbgrader
-  # when: grading server, not jupyterhub server
-
-- name: Install rudaux
-  include_role:
-    name: rudaux
-  # when: canvas is being used?
-
 - name: Create JupyterHub Config Directory
   file:
     path: '{{ jupyterhub_srv_dir }}'
@@ -107,7 +92,7 @@
 - name: Add Jupyterhub Config
   template:
     src: jupyterhub_config_base.py.j2
-    dest: "{{ jupyterhub_srv_dir }}/jupyterhub_config.py"
+    dest: '{{ jupyterhub_srv_dir }}/jupyterhub_config.py'
     mode: 0644
     owner: root
     group: root
@@ -122,6 +107,14 @@
     owner: root
     group: root
 
+- name: Add User FS creation script
+  copy:
+    src: zfs_homedir.sh
+    dest: '{{ jupyterhub_srv_dir }}'
+    mode: '0700'
+    owner: root
+    group: root
+
 - name: Jupyterhub Service definition
   template:
     src: jupyterhub.service.j2
@@ -131,8 +124,8 @@
 
 - name: Add jupyterhub port to to home zone (assume firewalld)
   firewalld:
-    zone: "home"
-    port: "{{ jupyterhub_api_port }}/tcp"
+    zone: 'home'
+    port: '{{ jupyterhub_api_port }}/tcp'
     immediate: yes
     state: enabled
     permanent: true
