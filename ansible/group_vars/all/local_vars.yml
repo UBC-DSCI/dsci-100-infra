@@ -10,8 +10,8 @@ syzygy_html_longname: "UBC"
 # The docker image to use for notebooks
 # jupyterhub_docker_image: 'pimsubc/nonroot'
 # jupyterhub_docker_container: 'pimsubc/nonroot:0.1'
-jupyterhub_docker_image: 'samhinshaw/dsci100-r-notebook'
-jupyterhub_docker_container: 'samhinshaw/dsci100-r-notebook:latest'
+jupyterhub_docker_image: 'ubcdsci/r-dsci-100'
+jupyterhub_docker_container: 'ubcdsci/r-dsci-100:latest'
 
 
 # Devices should really be reported by the terraform provider and kept passed
