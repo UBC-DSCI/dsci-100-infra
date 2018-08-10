@@ -25,6 +25,17 @@
     - { dest: "/etc/cron.daily/zfs-auto-snapshot" }
     - { dest: "/etc/cron.weekly/zfs-auto-snapshot" }
 
+- name: Update file existence check
+  replace: 
+    dest: "{{ item.dest }}"
+    regexp: "^which zfs-auto-snapshot"
+    replace: "[[ -x /usr/local/sbin/zfs-auto-snapshot ]] || exit 0"
+
+  with_items:
+    - { dest: "/etc/cron.hourly/zfs-auto-snapshot" }
+    - { dest: "/etc/cron.daily/zfs-auto-snapshot" }
+    - { dest: "/etc/cron.weekly/zfs-auto-snapshot" }
+
 - name: Remove frequent and monthly snapshots
   file: path="{{ item.path }}" state=absent
   with_items:
