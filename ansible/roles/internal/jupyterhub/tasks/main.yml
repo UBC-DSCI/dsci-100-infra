@@ -23,7 +23,7 @@
 - name: Manage syzygyauthenticator
   include_role:
     name: syzygyauthenticator
-  when: jupyterhub_authenticator == 'syzygyauthenticator'
+  when: (jupyterhub_authenticator == 'syzygyauthenticator') or (jupyterhub_authenticator == 'shib')
 
 - name: Manage Shibboleth
   include_role:

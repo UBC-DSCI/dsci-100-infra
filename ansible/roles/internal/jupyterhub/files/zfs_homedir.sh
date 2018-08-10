@@ -25,7 +25,6 @@ main() {
 
     # Accept three and only three arguments
     if [[ -z "${1:-}" || -z "${2:-}" || -z "${3:-}" ]]; then
-        echo "Usage ${0} ${1} ${2} ${3}" >&2
         echo "Usage ${0} <COURSENAME> <USERNAME> <OWNER>" >&2
         echo >&2
         exit 1
