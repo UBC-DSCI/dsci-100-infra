@@ -1,0 +1,2 @@
+---
+zfs_auto_snap_dir: "/opt/zfs-auto-snapshot"
