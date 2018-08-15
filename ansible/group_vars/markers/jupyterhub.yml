@@ -1,0 +1,17 @@
+jupyterhub_spawner: 'dockerspawner'
+jupyterhub_authenticator: 'shib'
+jupyterhub_course_name: 'dsci100'
+
+jupyterhub_authenticators:
+  shib:
+    name: 'syzygyauthenticator.shib.RemoteUserAuthenticator'
+    options:
+      - conf_object: 'SyzygyAuthenticator.shibIDAttribute'
+        value: "'REMOTE_USER'"
+      - conf_object: 'SyzygyAuthenticator.shibUserEntitlements'
+        value: "'eduPersonEntitlement'"
+      - conf_object: 'SyzygyAuthenticator.shibValidEntitlements'
+        value: "set(['https://entitlements.ubc.ca/employee', 'https://entitlements.ubc.ca/faculty', 'https://entitlements.ubc.ca/student'])"
+      - conf_object: 'SyzygyAuthenticator.shibLogoutURL'
+        value: "'/Shibboleth.sso/Logout?return=https://authentication.ubc.ca/idp/profile/Logout'"
+

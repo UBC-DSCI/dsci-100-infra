@@ -24,5 +24,11 @@ ansible/setup: check-env
 hub/init: check-env
 	$(PLAYBOOK_CMD) --limit hubs plays/init.yml
 
+mark/init: check-env
+	$(PLAYBOOK_CMD) --limit markers plays/init.yml
+
 hub/apply: check-env
 	$(PLAYBOOK_CMD) --limit hubs plays/hub.yml
+
+mark/apply: check-env
+	$(PLAYBOOK_CMD) --limit markers plays/hub.yml

@@ -5,6 +5,9 @@ ssp_path: /var
 ssp_prefix: simplesamlphp-
 ssp_dir: "{{ ssp_path  }}/{{ ssp_prefix  }}{{ ssp_ver }}"
 
+jupyterhub_user_name: 'jupyter'
+jupyterhub_user_uid: 9999
+
 jupyterhub_srv_dir: '/srv/jupyterhub'
 jupyterhub_api_port: '8081'
 
@@ -13,14 +16,14 @@ jupyterhub_shib_dir: '/opt/shib_authenticator'
 jhub_docker_cull_run_s: 1800
 jhub_docker_cull_cull_s: 10800
 
-jupyterhub_docker_image: 'docker.io/callysto/pims-minimal'
-jupyterhub_docker_container: 'docker.io/callysto/pims-minimal:latest'
+# jupyterhub_docker_image: 'docker.io/callysto/pims-minimal'
+# jupyterhub_docker_container: 'docker.io/callysto/pims-minimal:latest'
 
-jupyterhub_notebook_dir: '/home/jovyan'
 # Not sure if this makes sense, because we would only run ansible once for each
 # JupyterHub... so not sure the best way to support multiple courses on one
 # JupyterHub through Ansible.
 jupyterhub_course_name: 'dsci100'
+jupyterhub_notebook_dir: '/home/jupyter'
 
 jupyterhub_global_options:
   - conf_object: 'JupyterHub.admin_access'
@@ -76,15 +79,13 @@ jupyterhub_spawners:
         value: "{'mem_limit': '2g', 'memswap_limit': '2g', 'cpu_period': 100000, 'cpu_quota': 100000 }"
       - conf_object: 'DockerSpawner.remove_containers'
         value: 'True'
-      - conf_object: 'DockerSpawner.host_homedir_format_string'
-        value: "'/tank/home/{username}'"
       - conf_object: 'DockerSpawner.notebook_dir'
         value: "'{{ jupyterhub_notebook_dir }}'"
       - conf_object: 'DockerSpawner.volumes'
         #! Is this interpolated correctly??
         # In fact, do we even want this?
-        # value: "'/tank/home/{{ jupyterhub_course_name }}/{username}': {{ jupyterhub_notebook_dir }}"
-        value: "'/tank/home/{username}': {{ jupyterhub_notebook_dir }}"
+        value: "{'/tank/home/{{ jupyterhub_course_name }}/{username}': '{{ jupyterhub_notebook_dir }}'}"
+        # value: "{'/tank/home/{username}': '{{ jupyterhub_notebook_dir }}'}"
   syzygyswiftsystemuserspawner:
     name: 'syzygyauthenticator.swiftsystemuserspawner.SyzygySwiftSystemUserSpawner'
     options:
@@ -127,23 +128,19 @@ jupyterhub_authenticators:
   shib:
     name: 'syzygyauthenticator.shib.RemoteUserAuthenticator'
     options:
-      - conf_object: 'SyzygyAuthenticator.user_id'
-        value: '{{ jupyterhub_user_uid }}'
-      - conf_object: 'SyzygyAuthenticator.homedir_string'
-        value: "'/tank/home/USERNAME'"
-      - conf_object: 'SyzygyAuthenticator.create_homedir_cmd'
-        value: "['/opt/syzygyauthenticator/zfs-homedir.sh', 'USERNAME', 'jupyter']"
-      - conf_object: 'SyzygyAuthenticator.create_system_users'
-        value: 'False'
-      - conf_object: 'SyzygyAuthenticator.create_user_homedir'
-        value: 'True'
+      - conf_object: 'SyzygyAuthenticator.shibIDAttribute'
+        value: 'eduPersonPrincipalName'
+      - conf_object: 'SyzygyAuthenticator.shibValidEntitlements'
+        value: "set()"
+      - conf_object: 'shibLogoutURL'
+        value: ""
   ltiauthenticator:
     name: 'ltiauthenticator.LTIAuthenticator'
     options:
       - conf_object: 'LTIAuthenticator.consumers'
         value: |
           {
-            "os.environ['LTI_CLIENT_KEY']": "os.environ['LTI_CLIENT_SECRET']"
+            os.environ['LTI_CLIENT_KEY']: os.environ['LTI_CLIENT_SECRET']
           }
   dummy:
     name: 'syzygyauthenticator.dummy.SyzygyDummyAuthenticator'
