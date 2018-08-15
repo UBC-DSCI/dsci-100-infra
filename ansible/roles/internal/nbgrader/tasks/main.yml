@@ -17,3 +17,9 @@
 
 - name: Install nbgrader R package dependencies
   command: Rscript -e "install.packages(c('repr', 'IRdisplay', 'evaluate', 'crayon', 'pbdZMQ', 'devtools', 'uuid', 'digest'), dependencies = TRUE, repos = 'https://cran.rstudio.com')
+
+- name: Install R kernel
+  command: Rscript -e "devtools::install_github('IRkernel/IRkernel')"
+
+- name: Initialize R kernel
+  command: Rscript -e "IRkernel::installspec(user = FALSE)"
