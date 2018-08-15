@@ -1,4 +1,3 @@
----
 - name: Install nbgrader
   pip: name=nbgrader executable=pip3.6
 
@@ -10,3 +9,16 @@
 
 - name: Install nbgrader server extension
   command: jupyter serverextension enable --sys-prefix --py nbgrader
+
+- name: Install nbgrader dependency openssl-devel
+  yum:
+    name: openssl-devel
+    state: present
+
+- name: Install R
+  yum:
+    name: R
+    state: present
+
+- name: Install nbgrader R package dependencies
+  command: Rscript -e "install.packages(c('repr', 'IRdisplay', 'evaluate', 'crayon', 'pbdZMQ', 'devtools', 'uuid', 'digest'), dependencies = TRUE, repos = 'https://cran.rstudio.com')
