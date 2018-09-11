@@ -16,6 +16,11 @@ module "syzygy" {
   mark_mac     = "66:a5:b8:9c:ab:97"
   mark_address = "142.103.37.174"
   mark_fqdn    = "mark-prod-dsci.stat.ubc.ca"
+  mds_bridge   = "br0"
+  mds_mac      = ""
+  mds_address  = "142.103.37.175"
+  mds_fqdn     = "mark-prod-mds.stat.ubc.ca"
+ 
   environment  = "production"
 }
 
