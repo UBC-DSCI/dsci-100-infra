@@ -158,11 +158,24 @@ resource "ansible_group" "markers" {
   inventory_group_name = "markers"
 }
 
+resource "ansible_group" "mdss" {
+  inventory_group_name = "mdss"
+}
+
 resource "ansible_host" "marking" {
   inventory_hostname = "${var.mark_fqdn}"
   groups = [
     "all",
     "${ansible_group.markers.inventory_group_name}",
+    "${ansible_group.environment.inventory_group_name}",
+  ]
+}
+
+resource "ansible_host" "mdsing" {
+  inventory_hostname = "${var.mds_fqdn}"
+  groups = [
+    "all",
+    "${ansible_group.mdss.inventory_group_name}",
     "${ansible_group.environment.inventory_group_name}",
   ]
 }
