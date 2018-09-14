@@ -17,7 +17,7 @@ module "syzygy" {
   mark_address = "142.103.37.174"
   mark_fqdn    = "mark-prod-dsci.stat.ubc.ca"
   mds_bridge   = "br0"
-  mds_mac      = ""
+  mds_mac      = "52:54:3b:18:fb:17"
   mds_address  = "142.103.37.175"
   mds_fqdn     = "mark-prod-mds.stat.ubc.ca"
  
