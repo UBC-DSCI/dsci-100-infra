@@ -21,3 +21,5 @@ jupyterhub_docker_container: 'ubcdsci/r-dsci-100:latest'
 # so zfs is the second device and docker is the third.
 zfs_vdev_config: /dev/vdb
 openstack_ephemeral_docker_disk: /dev/vdc
+
+dehydrate_test_cert: False

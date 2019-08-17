@@ -14,17 +14,17 @@ variable "storage_pool" {
 
 variable "cloud_image" {
   description = "Cloud image to create instances from"
-  default     = "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-20150628_01.qcow2"
+  default     = "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
 }
 
 variable "vcpu" {
   description = "Number of VCPUs to allocate to new instances"
-  default = 1
+  default     = 1
 }
 
 variable "memory" {
   description = "Amount of memory to allocate to new instances"
-  default = 1024
+  default     = 1024
 }
 
 variable "hub_fqdn" {
@@ -37,17 +37,17 @@ variable "mark_fqdn" {
 
 variable "environment" {
   description = "Environment to place instances in"
-  default = "staging"
+  default     = "staging"
 }
 
 variable "docker_disk_size" {
   description = "Disk size for backing docker volume"
-  default = "21474836480"
+  default     = "32212254720"
 }
 
 variable "zfs_disk_size" {
   description = "Disk size for backing docker volume"
-  default = "21474836480"
+  default     = "137438953472"
 }
 
 variable "hub_bridge" {
@@ -73,3 +73,4 @@ variable "mark_mac" {
 variable "mark_address" {
   description = "IP address to assign to marker network interace"
 }
+
