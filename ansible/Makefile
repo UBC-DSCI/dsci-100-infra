@@ -26,9 +26,15 @@ hub/init: check-env
 
 mark/init: check-env
 	$(PLAYBOOK_CMD) --limit markers plays/init.yml
+	
+mds/init: check-env
+	$(PLAYBOOK_CMD) --limit mdss plays/init.yml
 
 hub/apply: check-env
 	$(PLAYBOOK_CMD) --limit hubs plays/hub.yml
 
 mark/apply: check-env
 	$(PLAYBOOK_CMD) --limit markers plays/hub.yml
+
+mds/apply: check-env
+	$(PLAYBOOK_CMD) --limit mdss plays/hub.yml

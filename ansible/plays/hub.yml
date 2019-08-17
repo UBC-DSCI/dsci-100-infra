@@ -134,7 +134,7 @@
 
 
 - name: Install and configure the hub
-  hosts: markers
+  hosts: markers,mdss
   become: true
   tasks:
     - name: Install nbgrader
