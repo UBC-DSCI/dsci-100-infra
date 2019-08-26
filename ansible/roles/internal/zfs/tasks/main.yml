@@ -1,13 +1,31 @@
 ---
-- name: Install zfs-release
-  yum:
-    name: '{{ zfs_release_rpm }}'
-    state: present
-  notify:
-    - Remove existing zfs packages
 
-- name: Flush ZFS Handlers
-  meta: flush_handlers
+- name: Check distro version
+  shell: cat /etc/centos-release
+  register: result
+  when: ansible_distribution == "CentOS"
+  check_mode: no
+  changed_when: false
+
+- name: Set zfs_distro_version if CentOS
+  set_fact:
+    zfs_distro_version: "{{ result.stdout | regex_search('[0-9]{1}\\.[0-9]+') }}"
+  when: ansible_distribution == "CentOS"
+
+- name: Set zfs_distro_version if RedHat
+  set_fact:
+    zfs_distro_version: "{{ ansible_distribution_version }}"
+  when: ansible_distribution != "CentOS"
+
+- name: Copy ZFS yum repo
+  template:
+    src: zfs.repo.j2
+    dest: /etc/yum.repos.d/zfs.repo
+
+- name: Copy ZFS GPG key
+  copy:
+    src: files/RPM-GPG-KEY-zfsonlinux
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
 
 - name: Install zfs kernel module
   yum:
@@ -27,7 +45,7 @@
 - name: Create tank zpool
   notify:
    - Start zfs
-  command: /sbin/zpool create -f '{{ zfs_pool_name }}' '{{ zfs_vdev_config }}'
+  command: /sbin/zpool create -f '{{ zfs_pool_name }}' {{ zfs_vdev_config }}
   args:
     creates: /tank
   when: zfs_vdev_config is defined

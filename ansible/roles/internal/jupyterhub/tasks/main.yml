@@ -1,3 +1,5 @@
+---
+
 - name: Manage landing page html repo
   include_role:
     name: '{{ jupyterhub_html_family }}'
@@ -5,46 +7,33 @@
 - name: Manage dockerspawner
   include_role:
     name: dockerspawner
-  when:
-    jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
 
 - name: Manage Jupyterhub Docker Cull script
   include_role:
     name: jhub-docker-cull
-  when:
-    jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
 
 - name: Get Docker image for JupyterHub containers
   docker_image:
     name: '{{ jupyterhub_docker_container }}'
-  when:
-    jupyterhub_spawner in ['syzygysystemuserspawner', 'syzygyswiftsystemuserspawner', 'dockerspawner']
+  when: jupyterhub_spawner in ['dockerspawner', 'syzygyswiftspawner']
 
 - name: Manage syzygyauthenticator
   include_role:
     name: syzygyauthenticator
-  when: (jupyterhub_authenticator == 'syzygyauthenticator') or (jupyterhub_authenticator == 'shib')
 
-- name: Manage Shibboleth
+- name: Install OAuthenticator
+  pip: name='oauthenticator' executable='pip3.6'
+  when: jupyterhub_authenticator == 'google'
+
+- name: Manage Shibboleth SP
   include_role:
     name: shibboleth-sp
   when: jupyterhub_authenticator == 'shib'
-
-- name: Examine groups
-  debug:
-    msg: 'Content of group_names is {{ group_names }}'
 
 - name: Add a jupyter user to run things as
   user:
     name: '{{ jupyterhub_user_name }}'
     uid: '{{ jupyterhub_user_uid }}'
-
-# Should't assume pool name here, fix later
-- name: Create ZFS course container
-  command: /sbin/zfs create 'tank/home/{{ jupyterhub_course_name }}'
-  args:
-    creates: '/tank/home/{{ jupyterhub_course_name }}'
-  when: zfs_vdev_config is defined
 
 - name: Install pycurl dependencies
   yum:
@@ -52,6 +41,7 @@
     state: '{{ item.state }}'
     update_cache: yes
   with_items:
+    - { 'name': 'gcc', 'state': 'present' }
     - { 'name': 'libcurl-devel', 'state': 'present' }
 
 - name: Install pycurl
@@ -92,7 +82,7 @@
 - name: Add Jupyterhub Config
   template:
     src: jupyterhub_config_base.py.j2
-    dest: '{{ jupyterhub_srv_dir }}/jupyterhub_config.py'
+    dest: "{{ jupyterhub_srv_dir }}/jupyterhub_config.py"
     mode: 0644
     owner: root
     group: root
@@ -106,6 +96,54 @@
     mode: 0600
     owner: root
     group: root
+  notify:
+    - Restart JupyterHub
+
+- name: Jupyterhub Service definition
+  template:
+    src: jupyterhub.service.j2
+    dest: /etc/systemd/system/jupyterhub.service
+  notify:
+    - Restart JupyterHub
+
+- name: Add jupyterhub port to to home zone (assume firewalld)
+  firewalld:
+    zone: "home"
+    port: "{{ jupyterhub_api_port }}/tcp"
+    immediate: yes
+    state: enabled
+    permanent: true
+
+- name: Ensure jupyterhub_notebook_template_dir exists
+  file:
+    path: "{{ jupyterhub_notebook_template_dir }}"
+    state: directory
+
+- name: Copy jupyter notebook template
+  template:
+    src: "notebooks/notebook.html.j2"
+    dest: "{{ jupyterhub_notebook_template_dir }}/notebook.html"
+
+- name: Copy jupyter tree template
+  template:
+    src: "notebooks/tree.html.j2"
+    dest: "{{ jupyterhub_notebook_template_dir }}/tree.html"
+
+- name: Ensure jupyterhub_hub_template_dir exists
+  file:
+    path: "{{ jupyterhub_hub_template_dir }}"
+    state: directory
+
+- name: Copy jupyterhub error template
+  template:
+    src: "hub-error.html.j2"
+    dest: "{{ jupyterhub_hub_template_dir }}/error.html"
+
+- name: Start + Enable jupyterhub
+  service:
+    name: jupyterhub
+    state: started
+    enabled: yes
 
 - name: Add User FS creation script
   copy:
@@ -115,17 +153,10 @@
     owner: root
     group: root
 
-- name: Jupyterhub Service definition
-  template:
-    src: jupyterhub.service.j2
-    dest: /etc/systemd/system/jupyterhub.service
-  notify:
-    - Start JupyterHub
-
-- name: Add jupyterhub port to to home zone (assume firewalld)
-  firewalld:
-    zone: 'home'
-    port: '{{ jupyterhub_api_port }}/tcp'
-    immediate: yes
-    state: enabled
-    permanent: true
+- name: Install jupyter container renice script
+  copy:
+    src: container_renice.sh
+    dest: /usr/local/bin/container-renice
+    mode: 0755
+    owner: root
+    group: root

@@ -5,4 +5,3 @@ base_packages:
   - { name: 'vim', state: 'present' }
   - { name: 'tmux', state: 'present' }
   - { name: 'screen', state: 'present' }
-  - { name: 'python2-pip', state: 'present' }

@@ -1,20 +1,16 @@
 # {{ ansible_managed }}
 {% block global %}
 import os
+
 from subprocess import check_call
 
 def create_fs_hook(spawner):
-    username = spawner.user.name
-    callysto_user = '{{ jupyterhub_user_name }}'
-    course = '{{ jupyterhub_course_name }}'
-    check_call(['{{ jupyterhub_srv_dir }}/zfs_homedir.sh', course, username, callysto_user])
+      username = spawner.user.name
+      callysto_user = 'jupyter'
+      course = '{{ jupyterhub_course_name }}'
+      check_call(['/opt/syzygyauthenticator/zfs-homedir.sh', course, username, callysto_user])
 
-{# Directly assign pre_spawn_hook here? Or should this be in the main.yml file #}
 c.Spawner.pre_spawn_hook = create_fs_hook
-
-{# May want to consider this as well for setting JupyterHub ip address #}
-{# from jupyter_client.localinterfaces import public_ips #}
-{# c.JupyterHub.hub_ip = public_ips()[0] #}
 
 {% for global_option in jupyterhub_global_options %}
 c.{{ global_option.conf_object }} = {{ global_option.value }}
@@ -25,8 +21,16 @@ c.{{ global_option.conf_object }} = {{ global_option.value }}
 c.{{ global_option.conf_object }} = {{ global_option.value }}
 {% endfor %}
 {% endif %}
-
 {% endblock %}
+
+{% block cookie -%}
+{% if jupyterhub_auth_token != "" -%}
+c.ConfigurableHTTPProxy.auth_token = {{ jupyterhub_auth_token }}
+{% endif -%}
+{% if jupyterhub_cookie_secret != "" -%}
+c.JupyterHub.cookie_secret = {{ jupyterhub_cookie_secret }}
+{% endif -%}
+{% endblock -%}
 
 {% block spawner %}
 {% if jupyterhub_spawner in jupyterhub_spawners %}
@@ -49,3 +53,7 @@ c.{{ authenticator_option.conf_object }}  = {{ authenticator_option.value }}
 {% endif %}
 {% endif %}
 {% endblock %}
+
+{% if jupyterhub_announcement != "" %}
+c.JupyterHub.template_vars = {'announcement': '<div class="alert alert-danger">{{ jupyterhub_announcement }}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'}
+{% endif %}

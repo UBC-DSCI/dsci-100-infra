@@ -1,7 +1,5 @@
-zfs_release_rpm: "http://download.zfsonlinux.org/epel/zfs-release.el{{ ansible_distribution_version | regex_replace('([0-9]+)\\.([0-9]+).*', '\\1_\\2') }}.noarch.rpm"
-
 zfs_pool_name: tank
-
+zfs_module_dkms: true
 #
 # A string containing a valid zfs vdev specification
 # e.g. 

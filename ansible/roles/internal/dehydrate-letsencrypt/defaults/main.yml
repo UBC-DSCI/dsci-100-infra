@@ -8,6 +8,8 @@ dehydrate_ca_staging: "https://acme-staging-v02.api.letsencrypt.org/directory"
 # By default obtain a fake certificate
 dehydrate_test_cert: True
 
+dehydrate_restore: False
+
 # One list item per machine, multiple names for the same machine
 # can be handled by space separating a single list item
 # e.g.

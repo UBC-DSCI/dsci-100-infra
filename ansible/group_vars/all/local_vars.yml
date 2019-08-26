@@ -1,4 +1,5 @@
 admin_email: help@stat.ubc.ca
+support_email: help@stat.ubc.ca
 domain: "dsc.stat.ubc.ca"
 jupyterhub_html_family: syzygy-html
 syzygy_html_longname: "UBC"

@@ -5,36 +5,57 @@ TF_PATH := $(TOP)/../terraform
 
 export PATH := $(TF_PATH)/bin/$(UNAME)_$(ARCH):$(PATH)
 
-ANSIBLE_CMD  = TF_STATE=$(TF_PATH)/$(env) ansible --private-key=../keys/id_syzygy_stat -i ./inventory
-PLAYBOOK_CMD = TF_STATE=$(TF_PATH)/$(env) ansible-playbook --private-key=../keys/id_syzygy_stat -i ./inventory
+ANSIBLE_CMD  = TF_STATE=$(TF_PATH)/$(ENV) ansible --private-key=../keys/id_syzygy_stat -i ./inventory
+PLAYBOOK_CMD = TF_STATE=$(TF_PATH)/$(ENV) ansible-playbook --private-key=../keys/id_syzygy_stat -i ./inventory
 
-setup:
-	@echo "Installing external Ansible roles"
-	/bin/bash scripts/role_update.sh
+help: tasks
 
-check-env:
-ifndef env
-	$(error environment is not defined [env=])
+tasks: 
+	@grep -A1 ^HELP Makefile | sed -e ':begin;$$!N;s/HELP: \(.*\)\n\(.*:\).*/\2 \1/;tbegin;P;D' | grep -v \\\-\\\- | sort | awk -F: '{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+
+check-playbook:
+ifndef PLAYBOOK
+	$(error PLAYBOOK is not defined [PLAYBOOK=])
+else
+export _PLAYBOOK = plays/$(PLAYBOOK).yml
 endif
 
+check-env:
+ifndef ENV
+	$(error environment is not defined [ENV=])
+endif
 
-ansible/setup: check-env
+check-limit:
+ifndef LIMIT
+export _LIMIT = --limit all
+else
+export _LIMIT = --limit $(LIMIT)
+endif
+
+HELP: Lists plays
+list-playbooks:
+	@grep -RH ^## plays/ | sed -e 's/\(plays\/\)\(.*\)\(.yml\)/\2/' | sort | awk 'BEGIN {FS = ":## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+
+HELP: Lists the tasks in a $PLAYBOOK in $ENV
+list-tasks: check-playbook check-limit
+	$(PLAYBOOK_CMD) --list-tasks $(_LIMIT) $(_PLAYBOOK)
+
+HELP: Lists all hosts in $ENV
+hosts: check-env check-limit
+	$(ANSIBLE_CMD) --list-hosts $(_LIMIT) all
+
+HELP: Run $PLAYBOOK ON $ENV in check-mode
+playbook/check: check-env check-playbook check-limit
+	$(PLAYBOOK_CMD) --check --diff $(_LIMIT) $(_PLAYBOOK)
+
+HELP: Run $PLAYBOOK ON $ENV
+playbook: check-env check-playbook check-limit
+	$(PLAYBOOK_CMD) $(_LIMIT) $(_PLAYBOOK)
+
+HELP: Setup ansible and refresh external roles
+ansible/setup: check-env check-limit
 	$(ANSIBLE_CMD) -m setup all
+	/bin/bash scripts/role_update.sh
 
-hub/init: check-env
-	$(PLAYBOOK_CMD) --limit hubs plays/init.yml
-
-mark/init: check-env
-	$(PLAYBOOK_CMD) --limit markers plays/init.yml
-	
-mds/init: check-env
-	$(PLAYBOOK_CMD) --limit mdss plays/init.yml
-
-hub/apply: check-env
-	$(PLAYBOOK_CMD) --limit hubs plays/hub.yml
-
-mark/apply: check-env
-	$(PLAYBOOK_CMD) --limit markers plays/hub.yml
-
-mds/apply: check-env
-	$(PLAYBOOK_CMD) --limit mdss plays/hub.yml

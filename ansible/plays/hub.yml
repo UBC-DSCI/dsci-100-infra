@@ -1,3 +1,4 @@
+## Install and configure syzygy host
 - name: Ensure sudo is configured correctly
   hosts: all
   become: true
