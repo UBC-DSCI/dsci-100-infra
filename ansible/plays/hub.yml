@@ -39,7 +39,6 @@
     - name: Manage ZFS
       tags: ['zfs']
       include_role:
-        name: zfs
         name: zfs-snapshot
 
     - name: Configure SELinux
