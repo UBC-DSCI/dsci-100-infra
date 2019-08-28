@@ -14,4 +14,5 @@ jupyterhub_authenticators:
         value: "set(['https://entitlements.ubc.ca/employee', 'https://entitlements.ubc.ca/faculty', 'https://entitlements.ubc.ca/student'])"
       - conf_object: 'SyzygyAuthenticator.shibLogoutURL'
         value: "'/Shibboleth.sso/Logout?return=https://authentication.ubc.ca/idp/profile/Logout'"
-
+      - conf_object: 'DockerSpawner.volumes'
+        value: "{'/tank/home/dsci100/{username}': '/home/jupyter'}"

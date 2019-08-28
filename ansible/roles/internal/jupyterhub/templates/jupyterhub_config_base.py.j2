@@ -8,7 +8,7 @@ def create_fs_hook(spawner):
       username = spawner.user.name
       callysto_user = 'jupyter'
       course = '{{ jupyterhub_course_name }}'
-      check_call(['/opt/syzygyauthenticator/zfs-homedir.sh', course, username, callysto_user])
+      check_call(['/srv/jupyterhub/zfs_homedir.sh', course, username, callysto_user])
 
 c.Spawner.pre_spawn_hook = create_fs_hook
 

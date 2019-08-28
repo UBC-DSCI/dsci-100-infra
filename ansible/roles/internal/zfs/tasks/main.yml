@@ -55,3 +55,9 @@
   args:
     creates: '/{{ zfs_pool_name }}/home'
   when: zfs_vdev_config is defined
+
+- name: Create course filesystems
+  command: /sbin/zfs create '{{zfs_pool_name }}/home/{{ jupyterhub_course_name }}'
+  args:
+    creates: '/{{zfs_pool_name }}/home/{{ jupyterhub_course_name }}'
+  when: jupyterhub_course_name is defined
