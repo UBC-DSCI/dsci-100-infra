@@ -1,6 +1,8 @@
 jupyterhub_spawner: 'dockerspawner'
 jupyterhub_authenticator: 'shib'
 jupyterhub_course_name: 'dsci100'
+jupyterhub_docker_image: 'ubcdsci/r-dsci-grading'
+jupyterhub_docker_container: 'ubcdsci/r-dsci-grading:latest'
 
 jupyterhub_authenticators:
   shib:
