@@ -8,13 +8,15 @@
   include_role:
     name: dockerspawner
 
-- name: Manage Jupyterhub Docker Cull script
-  include_role:
-    name: jhub-docker-cull
+- name: Manage Jupyterhub Docker Cull
+  pip:
+    name: jupyterhub-idle-culler
+    executable: '{{ python3_pip_executable }}'
 
 - name: Get Docker image for JupyterHub containers
   docker_image:
     name: '{{ jupyterhub_docker_container }}'
+    source: pull
   when: jupyterhub_spawner in ['dockerspawner', 'syzygyswiftspawner']
 
 - name: Manage syzygyauthenticator
@@ -22,7 +24,7 @@
     name: syzygyauthenticator
 
 - name: Install OAuthenticator
-  pip: name='oauthenticator' executable='pip3.6'
+  pip: name='oauthenticator' executable='{{ python3_pip_executable }}'
   when: jupyterhub_authenticator == 'google'
 
 - name: Manage Shibboleth SP
@@ -43,35 +45,24 @@
   with_items:
     - { 'name': 'gcc', 'state': 'present' }
     - { 'name': 'libcurl-devel', 'state': 'present' }
+    - { 'name': 'openssl-devel', 'state': 'present' }
 
 - name: Install pycurl
   pip:
     name: pycurl
-    executable: pip3.6
-  environment:
-    PYCURL_SSL_LIBRARY: nss
+    executable: '{{ python3_pip_executable }}'
 
 - name: Install Jupyterhub
   pip:
     name: jupyterhub
-    executable: pip3.6
-
-- name: Install node packages
-  yum:
-    name: nodejs
-    state: present
+    executable: '{{ python3_pip_executable }}'
 
 - name: Install configurable-http-proxy
   npm:
     name: configurable-http-proxy
     state: present
     global: yes
-
-# Clumsily install JupyterHub dependencies
-- name: Install LTIAuthenticator
-  include_role:
-    name: ltiauthenticator
-  when: jupyterhub_authenticator == 'ltiauthenticator'
+    version: '{{ jupyterhub_chp_version }}'
 
 - name: Create JupyterHub Config Directory
   file:
@@ -106,13 +97,12 @@
   notify:
     - Restart JupyterHub
 
-- name: Add jupyterhub port to to home zone (assume firewalld)
-  firewalld:
-    zone: "home"
-    port: "{{ jupyterhub_api_port }}/tcp"
-    immediate: yes
-    state: enabled
-    permanent: true
+- name: Configurable-HTTP-Proxy Service definition
+  template: 
+    src: configurable-http-proxy.service.j2
+    dest: /etc/systemd/system/configurable-http-proxy.service
+  notify:
+    - Restart CHP
 
 - name: Ensure jupyterhub_notebook_template_dir exists
   file:
@@ -145,13 +135,11 @@
     state: started
     enabled: yes
 
-- name: Add User FS creation script
-  copy:
-    src: zfs_homedir.sh
-    dest: '{{ jupyterhub_srv_dir }}'
-    mode: '0700'
-    owner: root
-    group: root
+- name: Start + Enable Configurable-HTTP-Proxy
+  service:
+    name: configurable-http-proxy
+    state: started
+    enabled: yes
 
 - name: Install jupyter container renice script
   copy:

@@ -1,3 +1,4 @@
+TraceEnable Off
 {% if jupyterhub_authenticator == 'shib' %}
 # Shib IdPv3 recommentation
 UseCanonicalName On
@@ -11,9 +12,9 @@ RequestHeader unset Shib-Authentication-Instant
 
 <VirtualHost *:80>
   ServerName {{ inventory_hostname }}
-  ErrorLog /var/log/httpd/jupyter-error.log
+  ErrorLog {{ apache_log_dir | default("/var/log/httpd") }}/jupyter-error.log
   LogLevel warn
-  CustomLog /var/log/httpd/jupyter-access.log combined
+  CustomLog {{ apache_log_dir | default("/var/log/httpd") }}/jupyter-access.log combined
 
   Redirect / https://{{ inventory_hostname }}/
 </VirtualHost>
@@ -43,16 +44,15 @@ RequestHeader unset Shib-Authentication-Instant
   </Location>
 {% endif %}
 
-  <Directory "/var/www/html/site">
-    Order allow,deny
-    Allow from all
+  <Directory "{{ apache_document_root | default('/var/www/html') }}/site">
+    Require all granted
   </Directory>
 
   <Location /jupyter>
+    ProxyPreserveHost on
     ProxyPass http://127.0.0.1:8000/jupyter
     ProxyPassReverse http://127.0.0.1:8000/jupyter
-    ProxyPreserveHost on
-    RequestHeader set X-Forwarded-Proto "https"
+    RequestHeader     set "X-Forwarded-Proto" expr=%{REQUEST_SCHEME}
   </Location>
 
 {% if jupyterhub_authenticator == 'shib' %}
@@ -85,16 +85,16 @@ RequestHeader unset Shib-Authentication-Instant
   </LocationMatch>
 
 
-  ErrorLog /var/log/httpd/jupyter-ssl-error.log
+  ErrorLog {{ apache_log_dir | default('/var/log/httpd') }}/jupyter-ssl-error.log
   LogLevel warn
-  CustomLog /var/log/httpd/jupyter-ssl-access.log combined
+  CustomLog {{ apache_log_dir | default('/var/log/httpd') }}/jupyter-ssl-access.log combined
 
 </VirtualHost>
 
+
 SSLProtocol             all -SSLv3 -TLSv1 -TLSv1.1
-SSLCipherSuite          ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256
-SSLHonorCipherOrder     on
-SSLCompression          off
+SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+SSLHonorCipherOrder     off
 
 # OCSP Stapling, only in httpd 2.3.3 and later
 SSLUseStapling          on

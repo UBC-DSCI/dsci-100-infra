@@ -1,8 +1,5 @@
 ## Initialize hosts (MAY REBOOT)
 ---
-- name: Import update play
-  import_playbook: update.yml
-
 - name: Initialize hosts for syzygy deployment
   hosts: all
   become: true
@@ -14,13 +11,6 @@
         name: "*"
         state: latest
       ignore_errors: true
-
-    - name: Install 4.x series kernel
-      include_role:
-        name: elrepo-kernel
-
-    - name: Flush any handlers before reboot
-      meta: flush_handlers
 
     - name: Check needs-restarting status
       command: needs-restarting -r

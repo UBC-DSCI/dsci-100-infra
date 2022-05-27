@@ -3,15 +3,15 @@ ARCH := $(shell uname -m)
 TOP := $(shell pwd)
 TF_PATH := $(TOP)/../terraform
 
-export PATH := $(TF_PATH)/bin/$(UNAME)_$(ARCH):$(PATH)
+GROUP ?= prod
 
-ANSIBLE_CMD  = TF_STATE=$(TF_PATH)/$(ENV) ansible --private-key=../keys/id_syzygy_stat -i ./inventory
-PLAYBOOK_CMD = TF_STATE=$(TF_PATH)/$(ENV) ansible-playbook --private-key=../keys/id_syzygy_stat -i ./inventory
+PLAYBOOK_CMD = ansible-playbook --private-key=../keys/id_rsa --vault-password-file=../keys/ansible-vault -i ./inventory
+ANSIBLE_CMD = ansible --private-key=../keys/id_rsa --vault-password-file=../keys/ansible-vault -i ./inventory
 
 help: tasks
 
-tasks: 
-	@grep -A1 ^HELP Makefile | sed -e ':begin;$$!N;s/HELP: \(.*\)\n\(.*:\).*/\2 \1/;tbegin;P;D' | grep -v \\\-\\\- | sort | awk -F: '{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+tasks:
+	@grep -A1 ^HELP Makefile | gsed -e ':begin;$$!N;s/HELP: \(.*\)\n\(.*:\).*/\2 \1/;tbegin;P;D' | grep -v \\\-\\\- | sort | awk -F: '{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 
 check-playbook:
@@ -33,6 +33,25 @@ else
 export _LIMIT = --limit $(LIMIT)
 endif
 
+check-tags:
+ifndef TAGS
+export _TAGS =
+else
+export _TAGS =--tags $(TAGS)
+endif
+
+HELP: Setup environment and refresh external roles
+setup: check-env
+	@echo "Creating host_vars/<env>.stat.ubc.ca from the example template"
+	[[ -f "host_vars/local_vars.yml" ]] || cp local_vars.yml.example host_vars/$(env).stat.ubc.ca
+	@echo ""
+	@echo "Update host_files/<env>.stat.ubc.ca to fit your environment."
+	@echo "Don't forget to set dehydrate_test_cert to False if you're sure Let's Encrypt is working."
+	@echo "Press enter to continue"
+	@read
+	@echo "Installing external Ansible roles"
+	/bin/bash scripts/role_update.sh
+
 HELP: Lists plays
 list-playbooks:
 	@grep -RH ^## plays/ | sed -e 's/\(plays\/\)\(.*\)\(.yml\)/\2/' | sort | awk 'BEGIN {FS = ":## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -47,15 +66,9 @@ hosts: check-env check-limit
 	$(ANSIBLE_CMD) --list-hosts $(_LIMIT) all
 
 HELP: Run $PLAYBOOK ON $ENV in check-mode
-playbook/check: check-env check-playbook check-limit
-	$(PLAYBOOK_CMD) --check --diff $(_LIMIT) $(_PLAYBOOK)
+playbook/check: check-env check-playbook check-limit check-tags
+	$(PLAYBOOK_CMD) --check --diff $(_LIMIT) $(_PLAYBOOK) $(_TAGS)
 
 HELP: Run $PLAYBOOK ON $ENV
 playbook: check-env check-playbook check-limit
-	$(PLAYBOOK_CMD) $(_LIMIT) $(_PLAYBOOK)
-
-HELP: Setup ansible and refresh external roles
-ansible/setup: check-env check-limit
-	$(ANSIBLE_CMD) -m setup all
-	/bin/bash scripts/role_update.sh
-
+	$(PLAYBOOK_CMD) $(_LIMIT) $(_PLAYBOOK) $(_TAGS)
