@@ -74,9 +74,9 @@
 - name: Apply roles for hub
   hosts: hubs
   roles:
-    - { role: geerlingguy.repo-epel, become: yes }
-    - { role: weareinteractive.sudo, become: yes }
-    - { role: devsec.hardening.ssh_hardening, become: yes }
+    - {role: geerlingguy.repo-epel, become: yes}
+    - {role: weareinteractive.sudo, become: yes}
+    - {role: devsec.hardening.ssh_hardening, become: yes}
 
     - role: geerlingguy.nginx
       become: yes
@@ -86,7 +86,7 @@
     - role: dehydrated-letsencrypt
       become: yes
       tags:
-        - httpd
+        - nginx
         - ssl
 
     - role: zfs
@@ -103,7 +103,7 @@
       become: yes
       tags:
         - docker
- 
+
     - role: docker-extra
       become: yes
       tags:

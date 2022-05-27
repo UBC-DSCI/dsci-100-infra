@@ -1,12 +1,11 @@
-jhub-mastodon ansible_host=192.168.123.59
-mark-whippet  ansible_host=192.168.123.74
+dsci100 ansible_host=192.168.56.80
 
 [hubs]
-jhub-mastodon
+dsci100
 
 
 [markers]
-mark-whippet
+dsci100
 
 [production:children]
 hubs
