@@ -115,9 +115,6 @@
         - nodejs
         - npm
 
-    - role: rudaux
-      become: yes
-
     - role: jupyterhub
       become: yes
       tags:
@@ -129,3 +126,6 @@
   roles:
     - role: nbgrader
       become: true
+    - role: rudaux
+      become: yes
+

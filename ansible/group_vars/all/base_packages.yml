@@ -3,4 +3,5 @@ base_packages:
   - vim
   - tmux
   - wget
+  - rsync
   - python36-devel

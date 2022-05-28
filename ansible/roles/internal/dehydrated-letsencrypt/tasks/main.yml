@@ -50,17 +50,6 @@
   notify:
     - Run dehydrate
 
-- name: Add config for dehydrated-letsencrypt
-  template:
-    src: "acme.conf.j2"
-    dest: '{{ apache_conf_path | default("/etc/httpd/conf.d") }}/acme.conf'
-    mode: "0644"
-    owner: root
-    group: root
-  notify: 
-   - restart apache
-   - Run dehydrate
-
 - name: Add cron job
   file: src="{{ acme_home }}/wrapper.sh" dest="/etc/cron.daily/dehydrated-letsencrypt" state=link
 
@@ -68,7 +57,7 @@
   meta: flush_handlers
 
 - name: Retain a copy of the configuration
-  synchronize:
+  ansible.posix.synchronize:
     src: '{{ acme_home }}'
     dest: '{{ acme_secrets }}'
     mode: 'pull'
