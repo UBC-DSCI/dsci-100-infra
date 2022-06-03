@@ -20,3 +20,44 @@ jupyterhub_spawners:
       - conf_object: 'DockerSpawner.volumes'
         value: "{'/tank/home/dsci100/{username}': '/home/jupyter'}"
 
+jupyterhub_roles: |
+  [
+    {
+      "name": "idle-culler",
+      "scopes": [
+        "read:users:activity",
+        "servers",
+        "admin:users"
+      ]
+    },
+    {
+      "name": "stats",
+      "scopes": [
+        "read:metrics"
+      ],
+      "services": ["stats"]
+    }
+  ]
+
+jupyterhub_services: |
+  [
+    {
+      'name': 'cull-idle',
+      'admin': True,
+      'command': [
+          sys.executable,
+          '-m',
+          'jupyterhub_idle_culler',
+          '--timeout={{ jhub_docker_cull_cull_s }}'
+      ]
+    },
+    {
+      "name": "stats",
+      "admin": False,
+      "api_token": "56de0323d204b8e8595572aa3efa5504"
+    }
+  ]
+
+jupyterhub_auth_token: 170352348c704148e4cda73b078b260a4d7db0b0d84c79641444a000746647ef
+jupyterhub_cookie_secret: 2f269a2ab4ef9bf19c11db284e876ccb
+jupyterhub_stats_service_token: 56de0323d204b8e8595572aa3efa5504
