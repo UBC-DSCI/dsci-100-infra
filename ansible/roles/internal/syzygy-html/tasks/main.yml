@@ -48,20 +48,3 @@
     - dest: '{{ syzygy_html_dir.dest }}/index.html'
       src: '/var/tmp/syzygy-html-index.html'
   ignore_errors: "{{ ansible_check_mode }}"
-
-- name: Add apache config
-  template:
-    src: jupyter-http.conf.j2
-    dest: "{{ apache_conf_path }}/jupyter-http.conf"
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart apache
-
-- name: Update DocumentRoot
-  notify:
-    - restart apache
-  lineinfile:
-    dest: '{{ apache_server_root }}/conf/httpd.conf'
-    regexp: '^DocumentRoot'
-    line: 'DocumentRoot "{{ syzygy_html_dir.dest }}"'

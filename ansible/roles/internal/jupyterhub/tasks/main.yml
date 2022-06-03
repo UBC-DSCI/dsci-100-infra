@@ -27,11 +27,6 @@
   pip: name='oauthenticator' executable='{{ python3_pip_executable }}'
   when: jupyterhub_authenticator == 'google'
 
-- name: Manage Shibboleth SP
-  include_role:
-    name: shibboleth-sp
-  when: jupyterhub_authenticator == 'shib'
-
 - name: Add a jupyter user to run things as
   user:
     name: '{{ jupyterhub_user_name }}'

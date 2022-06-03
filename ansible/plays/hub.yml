@@ -67,6 +67,12 @@
         - python39-pip
         - python39-devel
 
+    - name: Create DHParams for SSL
+      become: true
+      shell: openssl dhparam -out /etc/ssl/certs/dhparams.pem 2048
+      args:
+        creates: /etc/ssl/certs/dhparams.pem
+
     #  TODO Collect and apply kernel parameters from Trevor
     #- name: Kernel parameters
     #  with_dict: "{{ kernel_tuning_params }}"
@@ -124,8 +130,6 @@
 - name: Apply roles for markers
   hosts: markers
   roles:
-    - role: nbgrader
-      become: true
     - role: rudaux
       become: yes
 
