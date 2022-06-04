@@ -87,6 +87,13 @@ jupyterhub_spawners:
 
 jupyterhub_authenticator: 'pam'
 jupyterhub_authenticators:
+  ltiauthenticator:
+    name: 'ltiauthenticator.LTIAuthenticator'
+    options:
+      - conf_object: 'LTIAuthenticator.consumers'
+        value: "{ os.environ['LTI_CLIENT_KEY']: os.environ['LTI_CLIENT_SECRET'] }"
+
+
   google:
     name: 'syzygyauthenticator.google.SyzygyGoogleOAuthenticator'
     options:
