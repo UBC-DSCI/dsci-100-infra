@@ -53,6 +53,21 @@
 - name: Add cron job
   file: src="{{ acme_home }}/wrapper.sh" dest="/etc/cron.daily/dehydrated-letsencrypt" state=link
 
+- name: Create location path if necessary
+  file:
+    path: "{{ nginx_conf_path }}/http-locations.d"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Add nginx location handler for http
+  template:
+    src: acme-nginx.conf.j2
+    dest: "{{ nginx_conf_path }}/http-locations.d/acme-nginx.conf"
+  notify:
+    - reload nginx
+
 - name: Flush handlers for dehydrate
   meta: flush_handlers
 

@@ -48,3 +48,32 @@
     - dest: '{{ syzygy_html_dir.dest }}/index.html'
       src: '/var/tmp/syzygy-html-index.html'
   ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create nginx config locations
+  file: path={{ item.name }} state=directory owner=root group=root mode={{ item.mode }}
+  with_items:
+    - name: "{{ nginx_conf_path }}/http-extras.d"
+      mode: "0755"
+    - name: "{{ nginx_conf_path }}/http-locations.d"
+      mode: "0755"
+    - name: "{{ nginx_conf_path }}/https-locations.d"
+      mode: "0755"
+    - name: "{{ nginx_conf_path }}/https-extras.d"
+      mode: "0755"
+- name: Add nginx base config for syzygy https
+  template:
+    src: "syzygy-nginx-https.conf.j2"
+    dest: "{{ nginx_conf_path }}/syzygy-nginx-https.conf"
+  notify:
+    - reload nginx
+
+- name: Add nginx config for syzygy-html-redirect
+  template:
+    src: "syzygy-nginx-https-redirect.conf.j2"
+    dest: "{{ nginx_conf_path }}/http-extras.d/syzygy-nginx-https-redirect.conf"
+
+- name: Add nginx config for syzygy-html
+  template:
+    src: "syzygy-nginx-locations.conf.j2"
+    dest: "{{ nginx_conf_path }}/https-locations.d/syzygy-nginx-locations.conf"
+
