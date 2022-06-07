@@ -1,11 +1,11 @@
-dsci100 ansible_host=192.168.56.80
+dsci100.syzygy.farm ansible_connection=ssh ansible_user=ec2-user
 
 [hubs]
-dsci100
+dsci100.syzygy.farm
 
 
 [markers]
-dsci100
+dsci100.syzygy.farm
 
 [production:children]
 hubs
