@@ -52,7 +52,13 @@
   when: zfs_vdev_config is defined
 
 - name: Create ZFS home container
-  command: /sbin/zfs create '{{ zfs_pool_name }}'/home
-  args:
-    creates: '/{{ zfs_pool_name }}/home'
+  community.general.zfs:
+    name: '{{ zfs_pool_name }}/home'
+    state: present
   when: zfs_vdev_config is defined
+
+- name: Create ZFS course container
+  community.general.zfs:
+    name: '{{ zfs_pool_name }}/home/{{ jupyterhub_course_name }}'
+    state: present
+  when: zfs_vdev_config is defined and jupyterhub_course_name is defined
