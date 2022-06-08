@@ -61,13 +61,17 @@
     name: configurable-http-proxy
     state: present
     global: yes
-    version: '{{ jupyterhub_chp_version }}'
+    version: "{{ jupyterhub_chp_version | default('') }}"
 
 - name: Create JupyterHub Config Directory
   file:
     path: '{{ jupyterhub_srv_dir }}'
     state: directory
     mode: '0755'
+
+- name: Update facts if docker0 is not defined
+  action: setup
+  when: ansible_docker0 is not defined
 
 - name: Add Jupyterhub Config
   template:
@@ -139,6 +143,14 @@
     name: configurable-http-proxy
     state: started
     enabled: yes
+
+- name: Add User FS creation script
+  copy:
+    src: zfs-homedir.sh
+    dest: '{{ jupyterhub_srv_dir }}'
+    mode: '0700'
+    owner: root
+    group: root
 
 - name: Install jupyter container renice script
   copy:

@@ -3,7 +3,6 @@ dsci100.syzygy.farm ansible_connection=ssh ansible_user=ec2-user
 [hubs]
 dsci100.syzygy.farm
 
-
 [markers]
 dsci100.syzygy.farm
 
