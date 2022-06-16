@@ -28,7 +28,10 @@
   when: jupyterhub_authenticator == 'google'
 
 - name: Install LTIAuthenticator
-  pip: name='jupyterhub-ltiauthenticator' executable='{{ python3_pip_executable }}'
+  pip: 
+    name: 'jupyterhub-ltiauthenticator'
+    executable: '{{ python3_pip_executable }}'
+    version: "{{ jupyterhub_ltiauthenticator_version | default(omit) }}"
   when: jupyterhub_authenticator == 'ltiauthenticator'
 
 - name: Add a jupyter user to run things as
