@@ -20,7 +20,7 @@ jupyterhub_spawners:
       - conf_object: 'DockerSpawner.image'
         value: "'{{ jupyterhub_docker_image }}'"
       - conf_object: 'DockerSpawner.volumes'
-        value: "{'/tank/home/dsci100/{username}': '/home/jupyter'}"
+        value: "{'/tank/home/dsci100/{username}': '/home/jovyan'}"
 
 jupyterhub_roles: |
   [

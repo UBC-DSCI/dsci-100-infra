@@ -1,5 +1,5 @@
-admin_email: help@stat.ubc.ca
-support_email: help@stat.ubc.ca
+admin_email: [admin_email_here]
+support_email: [admin_email_here]
 syzygy_html_longname: "UBC"
 
 # zfs device
