@@ -24,8 +24,8 @@
       become: true
       tags: ["base-packages"]
       ansible.builtin.yum:
-        name: "{{ item }}"
-        state: present
+        name: "{{ item.name }}"
+        state: "{{ item.state | default('present') }}"
       with_items: "{{ base_packages }}"
       when: base_packages is defined
 

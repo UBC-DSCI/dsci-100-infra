@@ -1,7 +1,13 @@
 base_packages:
-  - git
-  - vim
-  - tmux
-  - wget
-  - rsync
-  - python36-devel
+  - name: git
+  - name: vim
+  - name: tmux
+  - name: wget
+  - name: rsync
+  - name: python36-devel
+  - name: runc
+    state: absent
+  - name: podman
+    state: absent
+  - name: buildah
+    state: absent
