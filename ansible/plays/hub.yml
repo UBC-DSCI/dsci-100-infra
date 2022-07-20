@@ -82,7 +82,7 @@
   roles:
     - {role: geerlingguy.repo-epel, become: yes}
     - {role: weareinteractive.sudo, become: yes}
-    - {role: devsec.hardening.ssh_hardening, become: yes}
+    # - {role: devsec.hardening.ssh_hardening, become: yes}
 
     - role: geerlingguy.nginx
       become: yes
