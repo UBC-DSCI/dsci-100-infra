@@ -12,7 +12,7 @@ def create_fs_hook(spawner):
 {% if jupyterhub_authenticator == "google" %}
       username = username.replace('.', '_2E')
 {% endif %}
-      callysto_user = 'jovyan'
+      callysto_user = '{{ jupyterhub_user_name }}'
       course = '{{ jupyterhub_course_name }}'
       check_call(['{{ jupyterhub_srv_dir }}/zfs-homedir.sh', course, username, callysto_user])
 

@@ -34,10 +34,11 @@
     version: "{{ jupyterhub_ltiauthenticator_version | default(omit) }}"
   when: jupyterhub_authenticator == 'ltiauthenticator'
 
-- name: Add a jupyter user to run things as
+- name: Add a jovyan user to run things as
   user:
     name: '{{ jupyterhub_user_name }}'
     uid: '{{ jupyterhub_user_uid }}'
+    group: '{{ jupyterhub_user_group }}'
 
 - name: Install pycurl dependencies
   yum:
