@@ -7,15 +7,16 @@
   check_mode: no
   changed_when: false
 
-- name: Set zfs_distro_version if CentOS
-  set_fact:
-    zfs_distro_version: "{{ result.stdout | regex_search('[0-9]{1}\\.[0-9]+') }}"
-  when: ansible_distribution == "CentOS"
-
 - name: Set zfs_distro_version if RedHat
   set_fact:
     zfs_distro_version: "{{ ansible_distribution_version }}"
-  when: ansible_distribution != "CentOS"
+  when: zfs_distro_version is undefined
+
+- name: Install kernel headers
+  yum:
+    name: kernel-devel
+    state: present
+    update_cache: yes
 
 - name: Copy ZFS yum repo
   template:
@@ -51,13 +52,13 @@
   when: zfs_vdev_config is defined
 
 - name: Create ZFS home container
-  command: /sbin/zfs create '{{ zfs_pool_name }}'/home
-  args:
-    creates: '/{{ zfs_pool_name }}/home'
+  community.general.zfs:
+    name: '{{ zfs_pool_name }}/home'
+    state: present
   when: zfs_vdev_config is defined
 
-- name: Create course filesystems
-  command: /sbin/zfs create '{{zfs_pool_name }}/home/{{ jupyterhub_course_name }}'
-  args:
-    creates: '/{{zfs_pool_name }}/home/{{ jupyterhub_course_name }}'
-  when: jupyterhub_course_name is defined
+- name: Create ZFS course container
+  community.general.zfs:
+    name: '{{ zfs_pool_name }}/home/{{ jupyterhub_course_name }}'
+    state: present
+  when: zfs_vdev_config is defined and jupyterhub_course_name is defined

@@ -1,0 +1,7 @@
+nginx_vhosts:
+  - listen: "80"
+    server_name: "{{ inventory_hostname }}"
+    root: "/usr/share/nginx/html"
+    extra_parameters: |
+      include conf.d/http-extras.d/*.conf;
+      include conf.d/http-locations.d/*.conf;

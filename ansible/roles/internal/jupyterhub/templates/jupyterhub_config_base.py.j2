@@ -1,20 +1,34 @@
 # {{ ansible_managed }}
 {% block global %}
 import os
+import sys
+
+c.JupyterHub.services = []
 
 from subprocess import check_call
 
 def create_fs_hook(spawner):
       username = spawner.user.name
+{% if jupyterhub_authenticator == "google" %}
+      username = username.replace('.', '_2E')
+{% endif %}
       callysto_user = 'jupyter'
       course = '{{ jupyterhub_course_name }}'
-      check_call(['/srv/jupyterhub/zfs_homedir.sh', course, username, callysto_user])
+      check_call(['{{ jupyterhub_srv_dir }}/zfs-homedir.sh', course, username, callysto_user])
 
 c.Spawner.pre_spawn_hook = create_fs_hook
 
 {% for global_option in jupyterhub_global_options %}
 c.{{ global_option.conf_object }} = {{ global_option.value }}
 {% endfor %}
+
+{% if jupyterhub_roles is defined %}
+c.JupyterHub.load_roles.extend( {{jupyterhub_roles }} )
+{% endif %}
+
+{% if jupyterhub_services is defined %}
+c.JupyterHub.services.extend( {{ jupyterhub_services }} )
+{% endif %}
 
 {% if jupyterhub_global_options_extra is defined %}
 {% for global_option in jupyterhub_global_options_extra %}
@@ -23,12 +37,18 @@ c.{{ global_option.conf_object }} = {{ global_option.value }}
 {% endif %}
 {% endblock %}
 
-{% block cookie -%}
+{% block proxy %}
 {% if jupyterhub_auth_token != "" -%}
-c.ConfigurableHTTPProxy.auth_token = {{ jupyterhub_auth_token }}
+c.ConfigurableHTTPProxy.auth_token = b'{{ jupyterhub_auth_token }}'
+c.JupyterHub.cleanup_servers = False
+c.ConfigurableHTTPProxy.should_start = False
+c.ConfigurableHTTPProxy.api_url = 'http://{{ jupyterhub_proxy_api_ip }}:{{ jupyterhub_proxy_api_port }}'
 {% endif -%}
+{% endblock %}
+
+{% block cookie -%}
 {% if jupyterhub_cookie_secret != "" -%}
-c.JupyterHub.cookie_secret = {{ jupyterhub_cookie_secret }}
+c.JupyterHub.cookie_secret = b'{{ jupyterhub_cookie_secret }}'
 {% endif -%}
 {% endblock -%}
 

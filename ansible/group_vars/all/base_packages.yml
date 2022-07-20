@@ -1,0 +1,7 @@
+base_packages:
+  - git
+  - vim
+  - tmux
+  - wget
+  - rsync
+  - python36-devel
