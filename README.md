@@ -1,3 +1,5 @@
+# TODO: this README is out of date, needs to be cleaned up
+
 # Server Setup
 
 ## Instructions
