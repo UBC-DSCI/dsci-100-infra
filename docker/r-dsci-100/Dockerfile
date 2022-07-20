@@ -13,6 +13,9 @@ USER ${NB_UID}
 
 WORKDIR "${HOME}"
 
+# remove the "work/" directory added in an earlier layer...
+RUN rm -rf work
+
 # Install R packages
 RUN mamba install --quiet --yes \
     'r-cowplot' \
