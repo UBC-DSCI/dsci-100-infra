@@ -4,6 +4,7 @@ docker_user_name: 'jovyan'
 jupyterhub_user_name: 'jovyan'
 jupyterhub_user_uid: 1000
 jupyterhub_user_group: 'users'
+jupyterhub_user_gid: 100
 
 jupyterhub_srv_dir: '/srv/jupyterhub'
 

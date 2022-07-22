@@ -38,7 +38,12 @@
   user:
     name: '{{ jupyterhub_user_name }}'
     uid: '{{ jupyterhub_user_uid }}'
-    group: '{{ jupyterhub_user_group }}'
+    group: '{{ jupyterhub_user_group }}' 
+
+- name: Set the jovyan group gid
+  group:
+    name: '{{ jupyterhub_user_group }}'
+    gid: '{{ jupyterhub_user_gid }}'
 
 - name: Install pycurl dependencies
   yum:
