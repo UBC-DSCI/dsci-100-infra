@@ -1,6 +1,6 @@
 ---
 - name: Install rudaux
   pip:
-    name: 'git+https://github.com/ianabc/rudaux'
+    name: "{{ rudaux_repo }}@{{ rudaux_branch }}#{{ rudaux_version }}"
     executable: "{{ python3_pip_executable | default('pip3.9') }}"
 
