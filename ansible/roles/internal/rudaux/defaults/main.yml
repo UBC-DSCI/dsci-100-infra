@@ -1,0 +1,6 @@
+---
+# Package name
+rudaux_package: rudaux
+rudaux_repo: git+https://github.com/UBC-DSCI/rudaux
+rudaux_version: 0.5.0
+rudaux_branch: master
