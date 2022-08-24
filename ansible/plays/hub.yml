@@ -50,6 +50,7 @@
       ansible.posix.firewalld:
         service: "{{ item.value.service }}"
         permanent: "{{ item.value.permanent | default('yes') }}"
+        immediate: "{{ item.value.immediate | default('yes') }}"
         state: "{{ item.value.state }}"
         zone: "{{ item.value.zone }}"
       with_dict: "{{ firewalld_service_rules }}"
