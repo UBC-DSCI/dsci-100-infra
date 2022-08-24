@@ -1,7 +1,7 @@
 jupyterhub_html_family: syzygy-html
 jupyterhub_authenticator: 'ltiauthenticator'
-jupyterhub_course_name: 'dsci100'
-jupyterhub_docker_image: 'ubcdsci/r-dsci-100:latest'
+
+jupyterhub_docker_container: '{{ jupyterhub_docker_image }}:{{ jupyterhub_docker_tag }}'
 
 jupyterhub_ltiauthenticator_version: 1.0.0
 
@@ -20,7 +20,7 @@ jupyterhub_spawners:
       - conf_object: 'DockerSpawner.image'
         value: "'{{ jupyterhub_docker_image }}'"
       - conf_object: 'DockerSpawner.volumes'
-        value: "{'/tank/home/dsci100/{username}': '/home/jovyan'}"
+        value: "{'/tank/home/{{ jupyterhub_course_name }}/{username}': '/home/jovyan'}"
 
 jupyterhub_roles: |
   [
@@ -56,11 +56,7 @@ jupyterhub_services: |
     {
       "name": "stats",
       "admin": False,
-      "api_token": "[api_token_here]"
+      "api_token": '"{{ jupyterhub_stats_service_token }}"'
     }
   ]
 
-jupyterhub_auth_token: [auth_token_here]
-jupyterhub_cookie_secret: [cookie_secret_here]
-jupyterhub_lti_client_key: [client_key_here]
-jupyterhub_lti_client_secret: [client_secret_here]

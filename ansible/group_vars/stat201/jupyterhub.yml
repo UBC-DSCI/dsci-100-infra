@@ -1,0 +1,3 @@
+jupyterhub_course_name: 'stat201'
+jupyterhub_docker_image: 'ubcdsci/r-dsci-100'
+jupyterhub_docker_tag: 'latest'

@@ -1,2 +1,4 @@
-jupyterhub_course_name: 'dsci100'
 jupyterhub_docker_image: 'ubcdsci/r-dsci-100-grading:latest'
+jupyterhub_docker_tag: 'latest'
+jupyterhub_docker_container: '{{ jupyterhub_docker_image }}:{{ jupyterhub_docker_tag }}'
+

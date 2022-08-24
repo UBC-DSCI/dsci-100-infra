@@ -1,10 +1,18 @@
-dsci100.syzygy.farm ansible_connection=ssh ansible_user=ec2-user
+[stat201]
+stat-201-student.stat.ubc.ca
+stat-201-instructor.stat.ubc.ca
 
-[hubs]
-dsci100.syzygy.farm
+[stat301]
+stat-301-student.stat.ubc.ca
+stat-301-instructor.stat.ubc.ca
+
+[hubs:children]
+stat201
+stat301
 
 [markers]
-dsci100.syzygy.farm
+stat-201-instructor.stat.ubc.ca
+stat-301-instructor.stat.ubc.ca
 
 [production:children]
 hubs

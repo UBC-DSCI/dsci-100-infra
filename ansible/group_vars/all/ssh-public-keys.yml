@@ -4,3 +4,7 @@ ssh_public_keys:
     user: '{{ ansible_user }}'
     state: 'present'
     public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9azSTIRSq/m75SHACvs7qtm5H7TR8tybtofHJcctQ5Ksp+U3SnZiTu+USuGc6EbYbsQfNjuGwXBmNuRmkXVMbX0AZNCKTAiBUzoCCO4KVJqztnC9LC37b3mm535PsrR6xsYLxfhVFzApwftR6YiuKHhkOmXUc/Zja5pkXUlwubGwl7BoKuqLmOjCM/8uP1tlegK4HTdfPnZyf0DVsNcFCbTLbfReMDimfmiQtrhdJ3JSRVT11e1EZZL3pGQ6DW5udhL8u1Cs2B0UuyqPsyMPVsB+d4V8H27OgQ24T4NlugpoivSSC8nIGyd8reUl39k2JgSqGY9c+Hbz/8uO0KzFb iana@fyodor.no-ip.org'
+  rodolfo:
+    user: '{{ ansible_user }}'
+    state: 'present'
+    public_key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIONg6MJu/FAOlxBVpOObzuRJlynt5gUDyyp7XoZdOOX1 rodolfo.lourenzutti@gmail.com'
