@@ -42,3 +42,6 @@ RUN pip install git+https://github.com/data-8/nbgitpuller@c23461d4f7ce47ec4e0d2b
 # Install the extension to remove the shift+M merge shortcut
 RUN mkdir -p /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension
 COPY rm-merge-shortcut.py /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings
+
+# Disable the cell toolbar (which ignores metadata and students often accidentally click + delete grading cells)
+RUN jupyter labextension disable @jupyterlab/cell-toolbar-extension
