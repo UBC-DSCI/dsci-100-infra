@@ -1,9 +1,11 @@
-name: Publish r-dsci-100 on DockerHub
+name: Publish r-dsci-100 and py-dsci-100 on DockerHub
 on: 
   push: 
     paths: 
       - 'docker/r-dsci-100/Dockerfile'
       - 'docker/r-dsci-100-grading/Dockerfile'
+      - 'docker/py-dsci-100/Dockerfile'
+      - 'docker/py-dsci-100-grading/Dockerfile'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,6 +31,8 @@ jobs:
           Changes in this Release
           - Rebuilt r-dsci-100 Docker image and published to DockerHub with new tag
           - Rebuilt r-dsci-100-grading Docker image and published to DockerHub with new tag
+          - Rebuilt py-dsci-100 Docker image and published to DockerHub with new tag
+          - Rebuilt py-dsci-100-grading Docker image and published to DockerHub with new tag
         draft: false
         prerelease: false
     - name: Publish to Registry
@@ -46,4 +50,20 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: docker/r-dsci-100-grading
+        tags: "latest,${{ steps.bump.outputs.new_tag }}"
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v4
+      with:
+        name: ubcdsci/py-dsci-100
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        workdir: docker/py-dsci-100
+        tags: "latest,${{ steps.bump.outputs.new_tag }}"
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@v4
+      with:
+        name: ubcdsci/py-dsci-100-grading
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        workdir: docker/py-dsci-100-grading
         tags: "latest,${{ steps.bump.outputs.new_tag }}"
