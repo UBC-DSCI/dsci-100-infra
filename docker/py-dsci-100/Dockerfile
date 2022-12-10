@@ -1,6 +1,6 @@
 # Copyright (c) UBC-DSCI Development Team.
 # Distributed under the terms of the Modified BSD License.
-FROM jupyter/r-notebook
+FROM jupyter/scipy-notebook
 
 LABEL maintainer="Tiffany Timbers <tiffany.timbers@gmail.com>"
 
@@ -18,25 +18,22 @@ RUN rm -rf work
 
 # Install R packages
 RUN mamba install --quiet --yes \
-    'r-cowplot' \
-    'r-ggally' \
-	'r-gridextra' \
-	'r-infer' \
-	'r-kknn' \
-	'r-testthat' \
-	'r-rpostgres' \
+        'numpy' \
+        'jinja2' \
+        'altair_data_server' \
+        'click' \
+        'ghp-import' \
+        'jupytext' \
+        'jupyter_contrib_nbextensions' \
+        'nodejs' \
     && mamba clean --all -f -y \
     && fix-permissions "${CONDA_DIR}" \
-    && fix-permissions "/home/${NB_USER}" \
-    && Rscript -e "remotes::install_github('allisonhorst/palmerpenguins@v0.1.0')" \
-    && Rscript -e "install.packages('ISLR', repos='http://cran.us.r-project.org')"
+    && fix-permissions "/home/${NB_USER}" 
 
 # Install nbgitpuller, jupytext, jlab-git
 RUN pip install git+https://github.com/data-8/nbgitpuller@c23461d4f7ce47ec4e0d2bcfc3b2fde4939b80f8 \
   && jupyter serverextension enable --sys-prefix nbgitpuller \
   && pip install jupyterlab-git \
-  && pip install jupytext --upgrade \
-  && jupyter labextension install @techrah/text-shortcuts \
   && jupyter lab build  
 
 # Install the extension to remove the shift+M merge shortcut
