@@ -2,8 +2,6 @@
 # Distributed under the terms of the Modified BSD License.
 FROM ubcdsci/r-dsci-100:latest
 
-LABEL maintainer="Tiffany Timbers <tiffany.timbers@stat.ubc.ca>"
-
 # install the rise slides extension
 RUN mamba install --quiet --yes "rise"
 
