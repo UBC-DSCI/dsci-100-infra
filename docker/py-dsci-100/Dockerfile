@@ -16,13 +16,14 @@ WORKDIR "${HOME}"
 # remove the "work/" directory added in an earlier layer...
 RUN rm -rf work
 
-# Install R packages
+# Install Python packages
 RUN mamba install --quiet --yes \
         'numpy' \
         'jinja2' \
         'altair_data_server' \
         'click' \
         'ghp-import' \
+        'ibis-framework' \
         'jupytext' \
         'jupyter_contrib_nbextensions' \
         'nodejs' \
