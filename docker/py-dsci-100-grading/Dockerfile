@@ -6,7 +6,13 @@ FROM ubcdsci/py-dsci-100:latest
 RUN mamba install --quiet --yes "rise"
 
 # install nbgrader
-RUN pip3 install --user git+https://github.com/ubc-dsci/nbgrader@autotest-with-limit-cell-height-ext \
+RUN mamba install --quiet --yes "nbgrader=0.7.1"
+
+# install autotest
+RUN git clone https://github.com/UBC-DSCI/autotest \ 
+    && cd autotest \ 
+    && chmod u+x install_autotest.sh \
+    && ./install_autotest.sh \
     && jupyter nbextension install --sys-prefix --py nbgrader --overwrite \
     && jupyter nbextension enable --sys-prefix --py nbgrader \
     && jupyter serverextension enable --sys-prefix --py nbgrader 
