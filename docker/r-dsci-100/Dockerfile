@@ -2,8 +2,6 @@
 # Distributed under the terms of the Modified BSD License.
 FROM jupyter/r-notebook
 
-LABEL maintainer="Tiffany Timbers <tiffany.timbers@gmail.com>"
-
 USER root
 
 # install vim
