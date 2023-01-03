@@ -19,4 +19,3 @@ RUN git clone https://github.com/UBC-DSCI/autotest \
 
 # Clean the cache
 RUN mamba clean --all -f -y 
-
