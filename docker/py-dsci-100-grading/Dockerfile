@@ -6,7 +6,7 @@ FROM ubcdsci/py-dsci-100:latest
 RUN mamba install --quiet --yes "rise"
 
 # install nbgrader
-RUN mamba install --quiet --yes "nbgrader=0.7.1"
+RUN mamba install --quiet --yes "nbgrader=0.6.2"
 
 # install autotest
 RUN git clone https://github.com/UBC-DSCI/autotest \ 
