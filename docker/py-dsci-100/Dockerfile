@@ -26,6 +26,7 @@ RUN mamba install --quiet --yes \
         'jupyter_contrib_nbextensions' \
         'nodejs' \
         'psycopg2' \
+        'vega_datasets' \
     && mamba clean --all -f -y \
     && fix-permissions "${CONDA_DIR}" \
     && fix-permissions "/home/${NB_USER}" 
