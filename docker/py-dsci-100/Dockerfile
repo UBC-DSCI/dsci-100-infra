@@ -27,6 +27,7 @@ RUN mamba install --quiet --yes \
         'nodejs' \
         'psycopg2' \
         'vega_datasets' \
+        'yellowbrick' \
     && mamba clean --all -f -y \
     && fix-permissions "${CONDA_DIR}" \
     && fix-permissions "/home/${NB_USER}" 
