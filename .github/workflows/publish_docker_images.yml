@@ -1,6 +1,8 @@
 name: Publish r-dsci-100 and py-dsci-100 on DockerHub
 on: 
   push: 
+    branches:
+      - main
     paths: 
       - 'docker/r-dsci-100/Dockerfile'
       - 'docker/r-dsci-100-grading/Dockerfile'
@@ -36,7 +38,7 @@ jobs:
         draft: false
         prerelease: false
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@v4
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ubcdsci/r-dsci-100
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -44,7 +46,7 @@ jobs:
         workdir: docker/r-dsci-100
         tags: "latest,${{ steps.bump.outputs.new_tag }}"
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@v4
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ubcdsci/r-dsci-100-grading
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -52,7 +54,7 @@ jobs:
         workdir: docker/r-dsci-100-grading
         tags: "latest,${{ steps.bump.outputs.new_tag }}"
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@v4
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ubcdsci/py-dsci-100
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -60,7 +62,7 @@ jobs:
         workdir: docker/py-dsci-100
         tags: "latest,${{ steps.bump.outputs.new_tag }}"
     - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@v4
+      uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ubcdsci/py-dsci-100-grading
         username: ${{ secrets.DOCKER_USERNAME }}
