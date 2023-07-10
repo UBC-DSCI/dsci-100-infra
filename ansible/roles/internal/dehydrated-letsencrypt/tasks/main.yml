@@ -71,6 +71,13 @@
 - name: Flush handlers for dehydrate
   meta: flush_handlers
 
+- name: Add nginx location handler for https
+  template:
+    src: acme-nginx.conf.j2
+    dest: "{{ nginx_conf_path }}/https-locations.d/acme-nginx.conf"
+  notify:
+    - reload nginx
+
 - name: Retain a copy of the configuration
   ansible.posix.synchronize:
     src: '{{ acme_home }}'
