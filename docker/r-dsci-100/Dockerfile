@@ -31,11 +31,10 @@ RUN mamba install --quiet --yes \
     && Rscript -e "install.packages('tidyclust', repos='http://cran.us.r-project.org')"
 
 # Install nbgitpuller, jupytext, jlab-git
-RUN pip install git+https://github.com/data-8/nbgitpuller@c23461d4f7ce47ec4e0d2bcfc3b2fde4939b80f8 \
+RUN pip install nbgitpuller \
   && jupyter serverextension enable --sys-prefix nbgitpuller \
   && pip install jupyterlab-git \
   && pip install jupytext --upgrade \
-  && jupyter labextension install @techrah/text-shortcuts \
   && jupyter lab build  
 
 # Install the extension to remove the shift+M merge shortcut
