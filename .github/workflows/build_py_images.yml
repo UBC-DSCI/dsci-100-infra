@@ -23,7 +23,7 @@ jobs:
         name: ubcdsci/py-dsci-100
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        dockerfile: "docker/py-dsci-100/Dockerfile"
+        workdir: "docker/py-dsci-100"
         snapshot: true
     - name: Rebuild and publish py-dsci-100-grading image
       uses: elgohr/Publish-Docker-Github-Action@v5
@@ -31,5 +31,5 @@ jobs:
         name: ubcdsci/py-dsci-100-grading
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        dockerfile: "docker/py-dsci-100-grading/Dockerfile"
+        workdir: "docker/py-dsci-100-grading"
         snapshot: true
