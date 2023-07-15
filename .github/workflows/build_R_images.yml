@@ -1,0 +1,35 @@
+name: Rebuild and publish ubcdsci/r-dsci-100 and ubcdsci/r-dsci-100-grading on DockerHub
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docker/r-dsci-100/Dockerfile"
+      - "docker/r-dsci-100-grading/Dockerfile"
+jobs:
+  rebuild-docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout main
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: "0"
+        ref: "main"
+    - name: Rebuild and publish r-dsci-100 image
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: ubcdsci/r-dsci-100
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: "docker/r-dsci-100/Dockerfile"
+        snapshot: true
+    - name: Rebuild and publish r-dsci-100-grading image
+      uses: elgohr/Publish-Docker-Github-Action@v5
+      with:
+        name: ubcdsci/r-dsci-100-grading
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: "docker/r-dsci-100-grading/Dockerfile"
+        snapshot: true
