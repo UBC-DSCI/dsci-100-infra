@@ -24,12 +24,14 @@ RUN mamba install --quiet --yes \
         'ghp-import' \
         'ibis-framework' \
         'jupytext' \
-        'jupyter_contrib_nbextensions' \
         'nodejs' \
         'psycopg2' \
     && mamba clean --all -f -y \
     && fix-permissions "${CONDA_DIR}" \
     && fix-permissions "/home/${NB_USER}" 
+
+# Currently (July 2023) -- need to install this separately via pip to avoid version conflicts
+RUN pip install jupyter_contrib_nbextensions
 
 # Install nbgitpuller, jupytext, jlab-git
 RUN pip install nbgitpuller \
