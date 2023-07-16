@@ -18,3 +18,7 @@ RUN  git clone -b autotest-with-limit-cell-height-ext https://github.com/UBC-DSC
 
 # Clean the cache
 RUN mamba clean --all -f -y 
+
+# re-upgrade jupyter-server (mamba downgrades it)
+RUN pip install --upgrade jupyter-server
+
