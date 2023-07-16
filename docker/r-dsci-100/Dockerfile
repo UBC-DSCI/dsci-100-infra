@@ -5,14 +5,15 @@ FROM jupyter/r-notebook
 USER root
 
 # install vim
-RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y vim libgsl27
 
 USER ${NB_UID}
 
-WORKDIR "${HOME}"
+WORKDIR "${HOME}/work"
 
-# remove the "work/" directory added in an earlier layer...
-RUN rm -rf work
+# disable warnings that pollute build logs; seems to be related to the update to python 3.11
+# https://discourse.jupyter.org/t/debugger-warning-it-seems-that-frozen-modules-are-being-used-python-3-11-0/16544/12
+ENV PYDEVD_DISABLE_FILE_VALIDATION=1
 
 # Install R packages
 RUN mamba install --quiet --yes \
@@ -37,9 +38,11 @@ RUN pip install nbgitpuller \
   && pip install jupytext --upgrade \
   && jupyter lab build  
 
-# Install the extension to remove the shift+M merge shortcut
-RUN mkdir -p /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension
-COPY rm-merge-shortcut.py /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings
-
 # Disable the cell toolbar (which ignores metadata and students often accidentally click + delete grading cells)
 RUN jupyter labextension disable @jupyterlab/cell-toolbar-extension
+
+# Install the extension to remove the shift+M merge shortcut
+# folder already exists RUN mkdir -p /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension
+COPY shortcuts.jupyterlab-settings /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings
+
+
