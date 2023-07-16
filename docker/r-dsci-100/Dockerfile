@@ -31,6 +31,9 @@ RUN mamba install --quiet --yes \
     && Rscript -e "install.packages('ISLR', repos='http://cran.us.r-project.org')" \
     && Rscript -e "install.packages('tidyclust', repos='http://cran.us.r-project.org')"
 
+# upgrade jupyter server
+RUN pip install --upgrade jupyter-server
+
 # Install nbgitpuller, jupytext, jlab-git
 RUN pip install nbgitpuller \
   && jupyter serverextension enable --sys-prefix nbgitpuller \

@@ -33,6 +33,9 @@ RUN mamba install --quiet --yes \
 # Currently (July 2023) -- need to install this separately via pip to avoid version conflicts
 RUN pip install jupyter_contrib_nbextensions
 
+# upgrade jupyter-server
+RUN pip install --upgrade jupyter-server
+
 # Install nbgitpuller, jupytext, jlab-git
 RUN pip install nbgitpuller \
   && jupyter serverextension enable --sys-prefix nbgitpuller \
