@@ -15,6 +15,11 @@ WORKDIR "${HOME}/work"
 # https://discourse.jupyter.org/t/debugger-warning-it-seems-that-frozen-modules-are-being-used-python-3-11-0/16544/12
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1
 
+# update scikit-learn to the current @main (July 20, 2023) 
+# to get this merged PR: https://github.com/scikit-learn/scikit-learn/pull/26772
+# which fixes this issue: https://github.com/scikit-learn/scikit-learn/issues/26768
+RUN pip install --upgrade git+https://github.com/scikit-learn/scikit-learn@7de59b2017f39048880a3858d32c8caef9308954
+
 # Install Python packages
 RUN mamba install --quiet --yes \
         'numpy' \
