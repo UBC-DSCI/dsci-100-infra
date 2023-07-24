@@ -29,7 +29,8 @@ RUN mamba install --quiet --yes \
     && fix-permissions "/home/${NB_USER}" \
     && Rscript -e "remotes::install_github('allisonhorst/palmerpenguins@v0.1.0')" \
     && Rscript -e "install.packages('ISLR', repos='http://cran.us.r-project.org')" \
-    && Rscript -e "install.packages('tidyclust', repos='http://cran.us.r-project.org')"
+    && Rscript -e "install.packages('tidyclust', repos='http://cran.us.r-project.org')" \
+    && Rscript -e "install.packages('janitor', repos='http://cran.us.r-project.org')"
 
 # upgrade jupyter server
 RUN pip install --upgrade jupyter-server
