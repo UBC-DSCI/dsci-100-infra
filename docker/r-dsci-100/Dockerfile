@@ -4,7 +4,7 @@ FROM jupyter/r-notebook
 
 USER root
 
-# install vim
+# install vim and libgsl (for tidyclust)
 RUN apt-get update && apt-get install -y vim libgsl27
 
 USER ${NB_UID}
@@ -32,21 +32,14 @@ RUN mamba install --quiet --yes \
     && Rscript -e "install.packages('tidyclust', repos='http://cran.us.r-project.org')" \
     && Rscript -e "install.packages('janitor', repos='http://cran.us.r-project.org')"
 
-# upgrade jupyter server
-RUN pip install --upgrade jupyter-server
-
-# Install nbgitpuller, jupytext, jlab-git
-RUN pip install nbgitpuller \
-  && jupyter serverextension enable --sys-prefix nbgitpuller \
-  && pip install jupyterlab-git \
-  && pip install jupytext --upgrade \
+# Install nbgitpuller, jlab-git
+RUN pip install nbgitpuller jupyterlab-git \
   && jupyter lab build  
 
 # Disable the cell toolbar (which ignores metadata and students often accidentally click + delete grading cells)
 RUN jupyter labextension disable @jupyterlab/cell-toolbar-extension
 
 # Install the extension to remove the shift+M merge shortcut
-RUN mkdir -p /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension
 COPY shortcuts.jupyterlab-settings /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings
 
 # Make sure everything in the home folder is owned by NB_USER

@@ -3,22 +3,10 @@
 FROM ubcdsci/py-dsci-100:latest
 
 # install the rise slides extension
-RUN mamba install --quiet --yes "rise"
+RUN pip install jupyterlab-rise 
 
-# install a particular version of nodejs required by nbgrader
-RUN mamba install --quiet --yes nodejs=16.17.1
-
-# install nbgrader (autotest-with-limit-cell-height-ext)
-RUN  git clone -b autotest-with-limit-cell-height-ext https://github.com/UBC-DSCI/nbgrader \ 
-    && cd nbgrader \ 
-    && pip install . \
-    && jupyter nbextension install --sys-prefix --py nbgrader --overwrite \
-    && jupyter nbextension enable --sys-prefix --py nbgrader \
-    && jupyter serverextension enable --sys-prefix --py nbgrader 
+# install nbgrader
+RUN pip install "git+https://github.com/ubc-dsci/nbgrader.git@autotest-0.9.x"
 
 # Clean the cache
 RUN mamba clean --all -f -y 
-
-# re-upgrade jupyter-server (mamba downgrades it)
-RUN pip install --upgrade jupyter-server
-
