@@ -10,3 +10,4 @@ RUN pip install "git+https://github.com/ubc-dsci/nbgrader.git@autotest-0.9.x"
 
 # Clean the cache
 RUN mamba clean --all -f -y 
+
