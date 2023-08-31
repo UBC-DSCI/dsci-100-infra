@@ -24,7 +24,6 @@ RUN pip install --upgrade git+https://github.com/scikit-learn/scikit-learn@7de59
 RUN mamba install --quiet --yes \
         'numpy' \
         'jinja2' \
-        'altair_data_server' \
         'click' \
         'ghp-import' \
         'ibis-framework' \
@@ -33,6 +32,9 @@ RUN mamba install --quiet --yes \
     && mamba clean --all -f -y \
     && fix-permissions "${CONDA_DIR}" \
     && fix-permissions "/home/${NB_USER}" 
+
+# Install some recent python package that might not be on conda yet
+RUN pip install pandas"<2.1" altair">=5.1.1" "vegafusion[embed]" vl-convert-python">=0.13"
 
 # Install nbgitpuller, jlab-git
 RUN pip install nbgitpuller jupyterlab-git \
