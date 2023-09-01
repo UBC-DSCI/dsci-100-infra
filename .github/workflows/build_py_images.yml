@@ -17,15 +17,18 @@ jobs:
       with:
         fetch-depth: "0"
         ref: "main"
+    - name: Create release tag
+      id: release
+      shell: bash
+      run: echo "tag=$(echo ${GITHUB_REF:10})" >> $GITHUB_OUTPUT
     - name: Rebuild and publish py-dsci-100 image
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ubcdsci/py-dsci-100
-        id: build-image
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: "docker/py-dsci-100"
-        snapshot: true
+        tags: "latest,${{ steps.release.outputs.tag }}"
     - name: Rebuild and publish py-dsci-100-grading image
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
@@ -33,4 +36,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: "docker/py-dsci-100-grading"
-        tags: "latest,${{ steps.build-image.outputs.snapshot-tag }}"
+        tags: "latest,${{ steps.release.outputs.tag }}"
