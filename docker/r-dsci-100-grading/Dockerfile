@@ -6,7 +6,7 @@ FROM ubcdsci/r-dsci-100:latest
 RUN pip install jupyterlab-rise 
 
 # install nbgrader
-RUN pip install "git+https://github.com/ubc-dsci/nbgrader.git@autotest-0.9.x"
+RUN pip install "git+https://github.com/jupyter/nbgrader.git"
 
 # Clean the cache
 RUN mamba clean --all -f -y 
