@@ -10,4 +10,3 @@ RUN pip install "git+https://github.com/jupyter/nbgrader.git"
 
 # Clean the cache
 RUN mamba clean --all -f -y 
-
