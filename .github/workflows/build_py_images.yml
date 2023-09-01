@@ -20,7 +20,7 @@ jobs:
     - name: Create release tag
       id: release
       shell: bash
-      run: echo "tag=$(echo ${GITHUB_REF:10})" >> $GITHUB_OUTPUT
+      run: echo "tag=$(git rev-parse --short=12 HEAD)" >> $GITHUB_OUTPUT
     - name: Rebuild and publish py-dsci-100 image
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
