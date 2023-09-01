@@ -18,6 +18,7 @@ jobs:
         fetch-depth: "0"
         ref: "main"
     - name: Rebuild and publish r-dsci-100 image
+      id: build-image
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ubcdsci/r-dsci-100
@@ -32,4 +33,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: "docker/r-dsci-100-grading"
-        snapshot: true
+        tags: "latest,${{ steps.build-image.outputs.snapshot-tag }}$"
