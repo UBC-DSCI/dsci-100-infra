@@ -21,6 +21,7 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
         name: ubcdsci/py-dsci-100
+        id: build-image
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: "docker/py-dsci-100"
@@ -32,4 +33,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: "docker/py-dsci-100-grading"
-        snapshot: true
+        tags: "latest,${{ steps.build-image.outputs.snapshot-tag }}"
