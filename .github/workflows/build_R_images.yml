@@ -33,4 +33,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: "docker/r-dsci-100-grading"
-        tags: "latest,${{ steps.build-image.outputs.snapshot-tag }}$"
+        tags: "latest,${{ steps.build-image.outputs.snapshot-tag }}"
