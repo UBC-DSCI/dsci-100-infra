@@ -34,7 +34,7 @@ RUN mamba install --quiet --yes \
     && fix-permissions "/home/${NB_USER}" 
 
 # Install some recent python package that might not be on conda yet
-RUN pip install pandas"<2.1" altair">=5.0.1" "vegafusion[embed]" vl-convert-python
+RUN pip install pandas"<2.1" altair"==5.0.1" "vegafusion[embed]" vl-convert-python
 
 # Install nbgitpuller, jlab-git
 RUN pip install nbgitpuller jupyterlab-git \
