@@ -2,11 +2,8 @@
 # Distributed under the terms of the Modified BSD License.
 FROM ubcdsci/r-dsci-100:latest
 
-# install the rise slides extension
-RUN pip install jupyterlab-rise 
-
-# install nbgrader
-RUN pip install "git+https://github.com/jupyter/nbgrader.git"
+# install nbgrader and the rise slides extension
+RUN pip install jupyterlab-rise nbgrader
 
 # Clean the cache
 RUN mamba clean --all -f -y 
