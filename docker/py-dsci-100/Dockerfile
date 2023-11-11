@@ -50,4 +50,3 @@ COPY shortcuts.jupyterlab-settings /home/${NB_USER}/.jupyter/lab/user-settings/\
 USER root
 RUN chown -R ${NB_USER} /home/${NB_USER}
 USER ${NB_UID}
-
