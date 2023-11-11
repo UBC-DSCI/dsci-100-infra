@@ -31,7 +31,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: "docker/r-dsci-100"
         tags: "latest,${{ steps.release.outputs.tag }}"
-        platforms: linux/amd64, linux/arm64, darwin/arm64
+        platforms: linux/amd64,linux/arm64,darwin/arm64
     - name: Rebuild and publish r-dsci-100-grading image
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
@@ -40,4 +40,4 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: "docker/r-dsci-100-grading"
         tags: "latest,${{ steps.release.outputs.tag }}"
-        platforms: linux/amd64, linux/arm64, darwin/arm64
+        platforms: linux/amd64,linux/arm64,darwin/arm64
