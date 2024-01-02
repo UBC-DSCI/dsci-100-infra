@@ -56,3 +56,6 @@ RUN apt install zip
 RUN chown -R ${NB_USER} /home/${NB_USER}
 
 USER ${NB_UID}
+
+#Disable healthcheck for performance reasons
+HEALTHCHECK NONE
