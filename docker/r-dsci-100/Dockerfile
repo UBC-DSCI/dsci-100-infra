@@ -1,6 +1,6 @@
 # Copyright (c) UBC-DSCI Development Team.
 # Distributed under the terms of the Modified BSD License.
-FROM jupyter/r-notebook
+FROM jupyter/r-notebook:lab-4.0.5
 
 USER root
 
