@@ -5,7 +5,7 @@ FROM jupyter/r-notebook
 USER root
 
 # install vim and libgsl (for tidyclust)
-RUN apt-get update && apt-get install -y vim libgsl27
+RUN apt-get update && apt-get install -y vim libgsl27 libgsl-dev build-essential
 
 USER ${NB_UID}
 
@@ -30,6 +30,7 @@ RUN mamba install --quiet --yes \
     && fix-permissions "/home/${NB_USER}" \
     && Rscript -e "remotes::install_github('allisonhorst/palmerpenguins@v0.1.0')" \
     && Rscript -e "install.packages('ISLR', repos='http://cran.us.r-project.org')" \
+    && Rscript -e "install.packages('scales', repos='http://cran.us.r-project.org')" \
     && Rscript -e "install.packages('tidyclust', repos='http://cran.us.r-project.org')" \
     && Rscript -e "install.packages('janitor', repos='http://cran.us.r-project.org')"
 
