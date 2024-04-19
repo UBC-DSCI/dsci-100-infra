@@ -25,14 +25,11 @@ RUN mamba install --quiet --yes \
         'nodejs' \
         'psycopg2' \
         'jupyter-resource-usage' \
-        'altair' \
-        'pandas<2.1' \
+        'altair-all' \
+        'pandas' \
     && mamba clean --all -f -y \
     && fix-permissions "${CONDA_DIR}" \
     && fix-permissions "/home/${NB_USER}" 
-
-# Install some recent python package that might not be on conda yet
-RUN pip install "vegafusion[embed]" vl-convert-python
 
 # Install nbgitpuller, jlab-git, newest pexpect 4.9.0
 RUN pip install nbgitpuller jupyterlab-git==0.50.0 pexpect==4.9.0 \
