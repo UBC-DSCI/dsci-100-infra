@@ -24,6 +24,7 @@ RUN mamba install --quiet --yes \
 	'r-kknn' \
 	'r-testthat' \
 	'r-rpostgres' \
+  'r-themis' \
   'jupyter-resource-usage' \
     && mamba clean --all -f -y \
     && fix-permissions "${CONDA_DIR}" \
@@ -40,6 +41,9 @@ RUN pip install nbgitpuller jupyterlab-git pexpect==4.9.0 \
 
 # Disable the cell toolbar (which ignores metadata and students often accidentally click + delete grading cells)
 RUN jupyter labextension disable @jupyterlab/cell-toolbar-extension
+
+# Disable announcement pop-up on start
+RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
 
 # Install the extension to remove the shift+M merge shortcut
 COPY shortcuts.jupyterlab-settings /home/${NB_USER}/.jupyter/lab/user-settings/\@jupyterlab/shortcuts-extension/shortcuts.jupyterlab-settings

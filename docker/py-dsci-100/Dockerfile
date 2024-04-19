@@ -25,16 +25,18 @@ RUN mamba install --quiet --yes \
         'nodejs' \
         'psycopg2' \
         'jupyter-resource-usage' \
+        'altair-all' \
+        'pandas' \
     && mamba clean --all -f -y \
     && fix-permissions "${CONDA_DIR}" \
     && fix-permissions "/home/${NB_USER}" 
 
-# Install some recent python package that might not be on conda yet
-RUN pip install pandas"<2.1" altair"==5.0.1" "vegafusion[embed]" vl-convert-python
-
 # Install nbgitpuller, jlab-git, newest pexpect 4.9.0
 RUN pip install nbgitpuller jupyterlab-git==0.50.0 pexpect==4.9.0 \
   && jupyter lab build  
+
+# Disable announcement pop-up on start
+RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
 
 # Disable the cell toolbar (which ignores metadata and students often accidentally click + delete grading cells)
 RUN jupyter labextension disable @jupyterlab/cell-toolbar-extension
@@ -49,6 +51,7 @@ COPY jupyter_server_config.py /home/${NB_USER}/.jupyter
 COPY .gitconfig /home/${NB_USER}/
 
 USER root
+
 # Install zip package
 RUN apt install zip
 
