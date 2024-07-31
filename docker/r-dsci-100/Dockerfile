@@ -1,6 +1,6 @@
 # Copyright (c) UBC-DSCI Development Team.
 # Distributed under the terms of the Modified BSD License.
-FROM jupyter/r-notebook:lab-4.0.5
+FROM quay.io/jupyter/r-notebook
 
 USER root
 
@@ -15,29 +15,31 @@ WORKDIR "${HOME}/work"
 # https://discourse.jupyter.org/t/debugger-warning-it-seems-that-frozen-modules-are-being-used-python-3-11-0/16544/12
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1
 
-# Install R packages
+# Install mamba packages
 RUN mamba install --quiet --yes \
-    'r-cowplot' \
-    'r-ggally' \
-	'r-gridextra' \
-	'r-infer' \
-	'r-kknn' \
-	'r-testthat' \
-	'r-rpostgres' \
+  'r-cowplot' \
+  'r-ggally' \
+  'r-gridextra' \
+  'r-infer' \
+  'r-kknn' \
+  'r-testthat' \
+  'r-rpostgres' \
   'r-themis' \
   'jupyter-resource-usage' \
-    && mamba clean --all -f -y \
-    && fix-permissions "${CONDA_DIR}" \
-    && fix-permissions "/home/${NB_USER}" \
-    && Rscript -e "remotes::install_github('allisonhorst/palmerpenguins@v0.1.0')" \
-    && Rscript -e "install.packages('ISLR', repos='http://cran.us.r-project.org')" \
-    && Rscript -e "install.packages('scales', repos='http://cran.us.r-project.org')" \
-    && Rscript -e "install.packages('tidyclust', repos='http://cran.us.r-project.org')" \
-    && Rscript -e "install.packages('janitor', repos='http://cran.us.r-project.org')"
+  && mamba clean --all -f -y \
+  && fix-permissions "${CONDA_DIR}" \
+  && fix-permissions "/home/${NB_USER}"
+
+# Install CRAN packages
+RUN Rscript -e "lib <- 'palmerpenguins'; remotes::install_github('allisonhorst/palmerpenguins@v0.1.0'); if ( ! library('palmerpenguins',character.only=TRUE,logical.return=TRUE)){quit(status=1,save='no')}" \
+  && Rscript -e "lib <- 'tidyclust'; install.packages(lib, repos='http://cran.us.r-project.org'); if ( ! library(lib,character.only=TRUE,logical.return=TRUE)){quit(status=1,save='no')}" \
+  && Rscript -e "lib <- 'ISLR'; install.packages(lib, repos='http://cran.us.r-project.org'); if ( ! library(lib,character.only=TRUE,logical.return=TRUE)){quit(status=1,save='no')}" \
+  && Rscript -e "lib <- 'scales'; install.packages(lib, repos='http://cran.us.r-project.org'); if ( ! library(lib,character.only=TRUE,logical.return=TRUE)){quit(status=1,save='no')}" \
+  && Rscript -e "lib <- 'janitor'; install.packages(lib, repos='http://cran.us.r-project.org'); if ( ! library(lib,character.only=TRUE,logical.return=TRUE)){quit(status=1,save='no')}" \
+  && Rscript -e "lib <- 'withr'; install.packages('https://cran.r-project.org/src/contrib/Archive/withr/withr_2.5.0.tar.gz', repos=NULL, type='source'); if ( ! library(lib,character.only=TRUE,logical.return=TRUE)){quit(status=1,save='no')}"
 
 # Install nbgitpuller, jlab-git, newest pexpect 4.9.0
-RUN pip install nbgitpuller jupyterlab-git pexpect==4.9.0 \
-  && jupyter lab build  
+RUN pip install nbgitpuller jupyterlab-git pexpect==4.9.0
 
 # Disable the cell toolbar (which ignores metadata and students often accidentally click + delete grading cells)
 RUN jupyter labextension disable @jupyterlab/cell-toolbar-extension
