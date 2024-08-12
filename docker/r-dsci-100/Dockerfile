@@ -5,7 +5,7 @@ FROM quay.io/jupyter/r-notebook
 USER root
 
 # install vim and libgsl (for tidyclust)
-RUN apt-get update && apt-get install -y vim libgsl27 libgsl-dev build-essential
+RUN apt-get update && apt-get install -y vim libgsl-dev build-essential
 
 USER ${NB_UID}
 
