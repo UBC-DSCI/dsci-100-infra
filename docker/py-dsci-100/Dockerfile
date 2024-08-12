@@ -1,6 +1,6 @@
 # Copyright (c) UBC-DSCI Development Team.
 # Distributed under the terms of the Modified BSD License.
-FROM jupyter/scipy-notebook
+FROM quay.io/jupyter/scipy-notebook
 
 USER root
 
@@ -17,23 +17,22 @@ ENV PYDEVD_DISABLE_FILE_VALIDATION=1
 
 # Install Python packages
 RUN mamba install --quiet --yes \
-        'numpy' \
-        'jinja2' \
-        'click' \
-        'ghp-import' \
-        'ibis-framework' \
-        'nodejs' \
-        'psycopg2' \
-        'jupyter-resource-usage' \
-        'altair-all' \
-        'pandas' \
-    && mamba clean --all -f -y \
-    && fix-permissions "${CONDA_DIR}" \
-    && fix-permissions "/home/${NB_USER}" 
+  'numpy' \
+  'jinja2' \
+  'click' \
+  'ghp-import' \
+  'ibis-framework' \
+  'nodejs' \
+  'psycopg2' \
+  'jupyter-resource-usage' \
+  'altair-all' \
+  'pandas' \
+  && mamba clean --all -f -y \
+  && fix-permissions "${CONDA_DIR}" \
+  && fix-permissions "/home/${NB_USER}" 
 
 # Install nbgitpuller, jlab-git, newest pexpect 4.9.0
-RUN pip install nbgitpuller jupyterlab-git==0.50.0 pexpect==4.9.0 \
-  && jupyter lab build  
+RUN pip install nbgitpuller jupyterlab-git pexpect==4.9.0
 
 # Disable announcement pop-up on start
 RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
