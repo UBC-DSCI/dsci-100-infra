@@ -47,3 +47,10 @@ c.AsyncContentsManager.allow_hidden = True
 ## Allow access to hidden files
 #  See also: ContentsManager.allow_hidden
 c.AsyncFileContentsManager.allow_hidden = True
+
+# Fix HTTP headers so RISE can open a frame
+c.ServerApp.tornado_settings = {
+    'headers': {
+        'Content-Security-Policy': "frame-ancestors 'self'"
+    }
+}
